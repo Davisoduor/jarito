@@ -140,10 +140,13 @@ function buildAssignment(fields: Record<string, string>): CanvasAssignment | nul
   const when = parseDateValue(dtstart);
   if (!when) return null;
 
-  const { title, course } = parseSummary(unescapeText(summary));
+  const parsed = parseSummary(unescapeText(summary));
+  // Canvas puts the course in a bracketed suffix on the title. Brightspace
+  // has no suffix; its course name travels in LOCATION instead.
+  const course = parsed.course || (fields.LOCATION ? shortCourse(unescapeText(fields.LOCATION)) : '');
   return {
     uid,
-    title,
+    title: cleanTitle(parsed.title),
     course,
     due: when.due,
     dueTime: when.dueTime,
@@ -222,7 +225,68 @@ export function buildSeenMap(assignments: CanvasAssignment[]): SeenMap {
   return map;
 }
 
-/** True when the URL looks like a Canvas calendar feed, so bad input fails early. */
-export function isCanvasFeedUrl(url: string): boolean {
-  return /^https:\/\/[a-z0-9.-]+\/feeds\/calendars\/user_[A-Za-z0-9]+\.ics$/i.test(url.trim());
+// ---- Feed links -------------------------------------------------------------
+
+export type Platform = 'canvas' | 'brightspace';
+
+const CANVAS_PATH = /^\/feeds\/calendars\/user_[A-Za-z0-9]+\.ics$/;
+const BRIGHTSPACE_PATH = /^\/d2l\/le\/calendar\/feed\/user\/feed\.ics$/;
+
+/**
+ * Calendar apps often hand out `webcal://` links; they are the same feed over
+ * https. Everything else is left for the validators to judge.
+ */
+export function normalizeFeedUrl(raw: string): string {
+  return raw.trim().replace(/^webcal:\/\//i, 'https://');
+}
+
+/**
+ * Which LMS a feed link belongs to, or null when it is neither.
+ *
+ * Canvas: https://<host>/feeds/calendars/user_<token>.ics, no query.
+ * Brightspace: https://<host>/d2l/le/calendar/feed/user/feed.ics?token=<token>
+ * (plus an optional numeric feedOU choosing one course). Hosts are open
+ * because schools serve both from their own domains.
+ */
+export function feedPlatform(raw: string): Platform | null {
+  let url: URL;
+  try {
+    url = new URL(normalizeFeedUrl(raw));
+  } catch {
+    return null;
+  }
+  if (url.protocol !== 'https:' || url.username || url.password || url.hash) return null;
+  if (CANVAS_PATH.test(url.pathname) && !url.search) return 'canvas';
+  if (BRIGHTSPACE_PATH.test(url.pathname) && isBrightspaceQuery(url.searchParams)) return 'brightspace';
+  return null;
+}
+
+function isBrightspaceQuery(params: URLSearchParams): boolean {
+  const keys = [...params.keys()];
+  if (!keys.includes('token')) return false;
+  if (keys.some(k => k !== 'token' && k !== 'feedOU')) return false;
+  if (new Set(keys).size !== keys.length) return false;
+  if (!/^[A-Za-z0-9_-]{8,}$/.test(params.get('token') ?? '')) return false;
+  const ou = params.get('feedOU');
+  return ou === null || /^\d+$/.test(ou);
+}
+
+/** True when the URL is a calendar feed Jarito can read, so bad input fails early. */
+export function isFeedUrl(url: string): boolean {
+  return feedPlatform(url) !== null;
+}
+
+/** Brightspace titles end in " - Due" on every deadline, which says nothing in a list of deadlines. */
+function cleanTitle(title: string): string {
+  return title.replace(/\s+-\s+Due$/i, '').trim();
+}
+
+/**
+ * Brightspace course names are long ("BIO 101 - Introduction to Biology -
+ * Fall 2026"). Keep a short leading code when there is one, else the name.
+ */
+export function shortCourse(name: string): string {
+  const first = name.split(' - ')[0].trim();
+  if (first.length <= 20 && /\d/.test(first)) return first.replace(/\s+/g, '-');
+  return name.length > 40 ? name.slice(0, 39).trimEnd() + '…' : name;
 }

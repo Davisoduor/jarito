@@ -15,10 +15,10 @@
     <p>Jarito has no accounts and no database. Here is everything that happens to your data.</p>
 
     <h2>What stays on your device</h2>
-    <p>Your Canvas feed link, your assignment list, and what you’ve marked done or started are saved in your browser’s local storage. They never leave that browser except as described below. Clearing site data, or pressing <em>Disconnect Canvas</em>, removes the link.</p>
+    <p>Your calendar feed link, your assignment list, and what you’ve marked done or started are saved in your browser’s local storage. They never leave that browser except as described below. Clearing site data, or pressing <em>Disconnect Canvas</em>, removes the link.</p>
 
     <h2>What passes through our server</h2>
-    <p>Canvas doesn’t let websites read calendar feeds directly, so when Jarito checks your calendar it sends your feed link to a small function at <code>/api/feed</code>. That function downloads the calendar from Canvas and hands it straight back to your browser. It doesn’t save the link or the calendar, and doesn’t write them to logs. Your IP address is used briefly to limit how often a single device can sync.</p>
+    <p>Canvas and Brightspace don’t let websites read calendar feeds directly, so when Jarito checks your calendar it sends your feed link to a small function at <code>/api/feed</code>. That function downloads the calendar from your school’s system and hands it straight back to your browser. It doesn’t save the link or the calendar, and doesn’t write them to logs. Your IP address is used briefly to limit how often a single device can sync.</p>
 
     <h2>Moving to your phone</h2>
     <p>The “Open on my phone” code puts your feed link after a <code>#</code> in the address. Browsers never send that part of an address to a server, and Jarito removes it from the address bar as soon as it has saved the link.</p>
@@ -27,9 +27,9 @@
     <p>No analytics, no ads, no cookies, no tracking, and nothing is sold or shared. Jarito is open source, so you can check all of this in <a href="https://github.com/Davisoduor/jarito">the code on GitHub</a>.</p>
 
     <h2>Your feed link</h2>
-    <p>Anyone who has your feed link can see your Canvas calendar. If you think it has leaked, reset it in Canvas (Calendar, then Calendar Feed, then reset) and paste the new one into Jarito.</p>
+    <p>Anyone who has your feed link can see your course calendar. If you think it has leaked, reset it: in Canvas, Calendar, then Calendar Feed, then reset; in Brightspace, Calendar, then Subscribe, then reset the token and paste the new one into Jarito.</p>
 
-    <p class="fine">Jarito is an independent project by <a href="https://oduorwebservices.com">Oduor Web Services</a> and is not affiliated with Instructure or Canvas. Questions: <a href="https://oduorwebservices.com/contact">get in touch</a>.</p>
+    <p class="fine">Jarito is an independent project by <a href="https://oduorwebservices.com">Oduor Web Services</a> and is not affiliated with Instructure, Canvas, D2L or Brightspace. Questions: <a href="https://oduorwebservices.com/contact">get in touch</a>.</p>
   </main>
 </body>
 </html>

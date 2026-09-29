@@ -1,4 +1,4 @@
-import { canvasCalendarUrl, canvasHost } from './school';
+import { schoolCalendarUrl as canvasCalendarUrl, schoolHost as canvasHost, schoolCalendarUrl, schoolHost } from './school';
 
 describe('canvasHost', () => {
   it('expands a bare school name to Instructure', () => {
@@ -23,5 +23,12 @@ describe('canvasHost', () => {
 describe('canvasCalendarUrl', () => {
   it('links to the calendar page', () => {
     expect(canvasCalendarUrl('sfsu')).toBe('https://sfsu.instructure.com/calendar');
+  });
+});
+
+describe('Brightspace', () => {
+  it('expands a bare name to brightspace.com and opens the homepage', () => {
+    expect(schoolHost('uvic', 'brightspace')).toBe('uvic.brightspace.com');
+    expect(schoolCalendarUrl('learn.school.edu', 'brightspace')).toBe('https://learn.school.edu/d2l/home');
   });
 });

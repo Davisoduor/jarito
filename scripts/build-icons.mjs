@@ -18,8 +18,8 @@ const og = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" hei
   <g transform="translate(96 110)"><rect width="120" height="120" rx="28" fill="#12465A"/>
   <circle cx="58" cy="62" r="30" fill="#E2A42B"/><circle cx="71" cy="51" r="23.5" fill="#12465A"/></g>
   <text x="96" y="370" font-family="Helvetica, Arial, sans-serif" font-size="92" font-weight="800" fill="#12303B" letter-spacing="-3">Keeps watch over</text>
-  <text x="96" y="470" font-family="Helvetica, Arial, sans-serif" font-size="92" font-weight="800" fill="#12303B" letter-spacing="-3">your Canvas deadlines.</text>
-  <text x="96" y="545" font-family="Helvetica, Arial, sans-serif" font-size="34" fill="#4E6166">jarito.app · free, no account</text>
+  <text x="96" y="470" font-family="Helvetica, Arial, sans-serif" font-size="92" font-weight="800" fill="#12303B" letter-spacing="-3">your course deadlines.</text>
+  <text x="96" y="545" font-family="Helvetica, Arial, sans-serif" font-size="34" fill="#4E6166">Canvas and Brightspace · free, no account</text>
 </svg>`);
 await sharp(og).png().toFile('public/og.png');
 console.log('icons written');

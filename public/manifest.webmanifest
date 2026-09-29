@@ -1,7 +1,7 @@
 {
   "name": "Jarito",
   "short_name": "Jarito",
-  "description": "Keeps watch over your Canvas deadlines.",
+  "description": "Keeps watch over your course deadlines.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

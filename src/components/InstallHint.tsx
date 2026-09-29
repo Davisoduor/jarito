@@ -42,7 +42,7 @@ export function InstallHint({ feedUrl }: { feedUrl: string }) {
     try {
       await navigator.clipboard.writeText(feedUrl);
       setCopied(true);
-    } catch { /* clipboard blocked; they can copy it from Canvas again */ }
+    } catch { /* clipboard blocked; they can copy it from Canvas or Brightspace again */ }
   };
 
   if (deferred) {
@@ -64,7 +64,7 @@ export function InstallHint({ feedUrl }: { feedUrl: string }) {
       <p className="install-lead">Put Jarito on your home screen</p>
       <ol className="install-steps">
         <li>
-          <button className="btn btn-primary" onClick={copy}>{copied ? 'Link copied' : 'Copy my Canvas link'}</button>
+          <button className="btn btn-primary" onClick={copy}>{copied ? 'Link copied' : 'Copy my calendar link'}</button>
         </li>
         <li>Tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>.</li>
         <li>Open Jarito from your home screen and tap <strong>Paste link</strong>. iPhone keeps the home-screen app separate from Safari, so it needs the link once more.</li>

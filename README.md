@@ -1,22 +1,35 @@
 # Jarito
 
-**Keeps watch over your Canvas deadlines.**
+**Keeps watch over your course deadlines.** Works with Canvas, and with Brightspace / D2L in beta.
 
-**[Try it → jarito.vercel.app](https://jarito.vercel.app)** · free, no account · [see it with sample coursework](https://jarito.vercel.app) if you don't use Canvas
+**[Try it → jarito.vercel.app](https://jarito.vercel.app)** · free, no account · [see it with sample coursework](https://jarito.vercel.app) if you don't have Canvas or Brightspace
 
-Jarito puts every assignment from every Canvas course into one list, sorted by what's due
+Jarito puts every assignment from every course into one list, sorted by what's due
 next, and tells you the moment a professor moves a due date, posts something new, or changes
-the brief. Canvas updates the date quietly; Jarito says so out loud.
+the brief. Your school's system updates the date quietly; Jarito says so out loud.
 
 ## Using it
+
+**Canvas**
 
 1. Type your school's Canvas address (or just the school name) and press **Open my Canvas
    calendar**.
 2. Click **Calendar Feed** at the bottom right of the calendar page and copy the link.
 3. Press **Paste link and start watching**.
-4. Add it to your home screen (Share → Add to Home Screen on iPhone; the install prompt on
-   Android/Chrome) so checking is one tap. Use **Open on my phone** to move to your phone
-   by scanning a code instead of retyping the link.
+
+**Brightspace / D2L (beta)**
+
+1. Open Brightspace and go to **Calendar**.
+2. Click **Subscribe**, choose **All Calendars and Tasks**, and copy the link. No Subscribe
+   button? In Calendar **Settings**, tick **Enable Calendar Feeds** and save.
+3. Press **Paste link and start watching**.
+
+Brightspace support is in beta: the parser was written from D2L's documented feed format and
+hasn't been checked against as many real feeds as Canvas has. If something looks wrong,
+[open an issue](https://github.com/Davisoduor/jarito/issues).
+
+**Every day:** add it to your home screen (Share → Add to Home Screen on iPhone; the install
+prompt on Android/Chrome) so checking is one tap. Use **Open on my phone** to move to your phone by scanning a code instead of retyping the link.
 
 Every time you open it, Jarito re-reads your feed and compares it with last time.
 
@@ -24,10 +37,10 @@ Every time you open it, Jarito re-reads your feed and compares it with last time
 
 - No accounts, no database, no analytics, no cookies.
 - Your feed link, assignments, and what you've ticked off live in your browser's local storage.
-- Canvas doesn't allow browsers to read feeds directly, so syncing goes through one small
+- Canvas and Brightspace don't allow browsers to read feeds directly, so syncing goes through one small
   function (`api/feed.ts`) that fetches the calendar and returns it. It doesn't store or log the
-  link or the calendar. It only accepts Canvas feed URLs (`/feeds/calendars/user_….ics` over
-  HTTPS), never follows redirects, caps responses at 2 MB, and rate-limits by IP.
+  link or the calendar. It only accepts Canvas feed URLs (`/feeds/calendars/user_….ics`) and
+  Brightspace feed URLs (`/d2l/le/calendar/feed/user/feed.ics?token=…`) over HTTPS, never follows redirects, caps responses at 2 MB, and rate-limits by IP.
 - The phone hand-off puts the link after `#` in the URL, which browsers never send to a server.
 
 Full details: [jarito.vercel.app/privacy](https://jarito.vercel.app/privacy).
@@ -67,4 +80,4 @@ in-function limiter only covers a single instance.
 ## Credits
 
 Built by [Davis Oduor](https://davisoduor.me) · [Oduor Web Services](https://oduorwebservices.com).
-Not affiliated with Instructure or Canvas. MIT licensed.
+Not affiliated with Instructure, Canvas, D2L or Brightspace. MIT licensed.

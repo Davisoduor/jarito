@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  parseCanvasIcs, diffAssignments, buildSeenMap, isCanvasFeedUrl,
+  parseCanvasIcs, diffAssignments, buildSeenMap, isFeedUrl, normalizeFeedUrl,
   type CanvasAssignment, type AssignmentChange, type SeenMap,
 } from '../lib/canvasIcs';
 import type { CourseworkStatus } from '../lib/types';
@@ -80,9 +80,9 @@ export function useJarito() {
   }, [setState]);
 
   const connect = useCallback(async (feedUrl: string) => {
-    const trimmed = feedUrl.trim();
-    if (!isCanvasFeedUrl(trimmed)) {
-      setError('That doesn’t look like a Canvas feed link. It should start with https:// and end in .ics');
+    const trimmed = normalizeFeedUrl(feedUrl);
+    if (!isFeedUrl(trimmed)) {
+      setError('That doesn’t look like a calendar feed link. Copy the whole link from Canvas (Calendar Feed) or Brightspace (Calendar, then Subscribe).');
       return;
     }
     await pull(trimmed, true);

@@ -6,35 +6,31 @@
 // Nothing here logs the feed URL or the body. The URL is a bearer credential:
 // anyone holding it can read that student's calendar.
 
+import { feedPlatform, normalizeFeedUrl } from '../../src/lib/canvasIcs.js';
+
 export const MAX_FEED_BYTES = 2 * 1024 * 1024;
 export const FETCH_TIMEOUT_MS = 20_000;
 
-const FEED_PATH = /^\/feeds\/calendars\/user_[A-Za-z0-9]+\.ics$/;
 const IPV4 = /^\d{1,3}(\.\d{1,3}){3}$/;
 
 /**
- * Canvas calendar feeds only. Unlike D.O.O., the host is not pinned to
- * *.instructure.com: many schools serve Canvas from their own domain
- * (canvas.school.edu). What stays fixed is the feed path, which is specific
- * enough that this cannot be pointed at an arbitrary page.
+ * Canvas and Brightspace calendar feeds only. The host is not pinned to
+ * *.instructure.com or *.brightspace.com, because many schools serve both
+ * from their own domain. What stays fixed is the feed path and its exact
+ * query shape (see feedPlatform), which is specific enough that this cannot
+ * be pointed at an arbitrary page.
  *
  * IP literals and single-label hosts are refused so the function can't be
  * aimed at internal addresses; together with `redirect: "manual"` below that
  * keeps it from being a general-purpose proxy.
  */
 export function isAllowedFeed(raw: string): boolean {
-  let url: URL;
-  try {
-    url = new URL(raw.trim());
-  } catch {
-    return false;
-  }
-  if (url.protocol !== 'https:') return false;
-  if (url.username || url.password || url.port || url.search || url.hash) return false;
+  if (!feedPlatform(raw)) return false;
+  const url = new URL(normalizeFeedUrl(raw));
+  if (url.port) return false;
   const host = url.hostname.toLowerCase();
   if (!host.includes('.') || host.startsWith('[') || IPV4.test(host)) return false;
-  if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.internal') || host.endsWith('.local')) return false;
-  return FEED_PATH.test(url.pathname);
+  return !(host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.internal') || host.endsWith('.local'));
 }
 
 export class FeedError extends Error {
@@ -43,13 +39,13 @@ export class FeedError extends Error {
   }
 }
 
-const FRESH_LINK = 'Get a fresh link from Canvas: Calendar, then Calendar Feed.';
+const FRESH_LINK = 'Get a fresh link: in Canvas, Calendar then Calendar Feed; in Brightspace, Calendar then Subscribe.';
 
 /** Fetches a feed and returns its text, or throws a FeedError worded for the student. */
 export async function fetchFeed(feedUrl: string, fetchImpl: typeof fetch = fetch): Promise<string> {
   if (!isAllowedFeed(feedUrl)) {
     throw new FeedError(
-      'That is not a Canvas calendar feed link. It should end in /feeds/calendars/user_….ics',
+      'That is not a Canvas or Brightspace calendar feed link.',
       400,
     );
   }
@@ -58,23 +54,23 @@ export async function fetchFeed(feedUrl: string, fetchImpl: typeof fetch = fetch
   try {
     // `redirect: "manual"`: the allow-list checks the URL we request, but a
     // followed redirect could land anywhere and we would return its body.
-    res = await fetchImpl(feedUrl.trim(), {
+    res = await fetchImpl(normalizeFeedUrl(feedUrl), {
       headers: { Accept: 'text/calendar', 'User-Agent': 'Jarito (+https://jarito.app)' },
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       redirect: 'manual',
     });
   } catch (err) {
     const timedOut = err instanceof Error && (err.name === 'TimeoutError' || err.name === 'AbortError');
-    throw new FeedError(timedOut ? 'Canvas took too long to answer. Try again in a minute.' : 'Could not reach Canvas. Check the link and try again.', 502);
+    throw new FeedError(timedOut ? 'Your school’s system took too long to answer. Try again in a minute.' : 'Could not reach your school’s system. Check the link and try again.', 502);
   }
 
   if (res.status >= 300 && res.status < 400) {
-    throw new FeedError(`Canvas redirected the request instead of returning the feed. ${FRESH_LINK}`, 502);
+    throw new FeedError(`Your school redirected the request instead of returning the feed. ${FRESH_LINK}`, 502);
   }
   if (res.status === 400 || res.status === 401 || res.status === 403 || res.status === 404) {
-    throw new FeedError(`Canvas no longer recognises this feed link; it may have been reset. ${FRESH_LINK}`, 502);
+    throw new FeedError(`Your school no longer recognises this feed link; it may have been reset. ${FRESH_LINK}`, 502);
   }
-  if (!res.ok) throw new FeedError(`Canvas answered with an error (${res.status}). Try again shortly.`, 502);
+  if (!res.ok) throw new FeedError(`Your school’s system answered with an error (${res.status}). Try again shortly.`, 502);
 
   const declared = Number(res.headers.get('content-length') ?? 0);
   if (declared > MAX_FEED_BYTES) throw new FeedError('That calendar is too large to read.', 502);

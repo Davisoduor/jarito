@@ -23,7 +23,7 @@ export function PhoneHandoff({ feedUrl, onClose }: { feedUrl: string; onClose: (
   return (
     <dialog ref={ref} className="sheet" onClose={onClose} aria-labelledby="phone-title">
       <h2 id="phone-title">Open Jarito on your phone</h2>
-      <p>Point your phone’s camera at this code. Jarito opens with your Canvas feed already connected.</p>
+      <p>Point your phone’s camera at this code. Jarito opens with your calendar already connected.</p>
       {src && <img className="qr" src={src} width={240} height={240} alt="QR code that opens Jarito with your feed connected" />}
       <p className="note">
         The code contains your private feed link. Only scan it with your own phone, and don’t share a screenshot of it.

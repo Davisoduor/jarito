@@ -34,7 +34,7 @@ export function AssignmentRow({ a, status, today, moved, onStatus }: Props) {
         <p className="row-title">
           {a.url ? (
             <a href={a.url} target="_blank" rel="noopener noreferrer">
-              {a.title}<ExternalLink size={12} aria-label="(opens Canvas)" className="row-ext" />
+              {a.title}<ExternalLink size={12} aria-label="(opens in your school’s site)" className="row-ext" />
             </a>
           ) : a.title}
         </p>

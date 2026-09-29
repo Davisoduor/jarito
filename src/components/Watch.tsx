@@ -141,7 +141,7 @@ export function Watch({ jarito }: { jarito: Jarito }) {
         </p>
         <div className="device-actions">
           <button className="btn" onClick={() => setPhoneOpen(true)}>Open on my phone</button>
-          <button className="btn btn-quiet" onClick={jarito.disconnect}>Disconnect Canvas</button>
+          <button className="btn btn-quiet" onClick={jarito.disconnect}>Disconnect calendar</button>
         </div>
       </section>}
 

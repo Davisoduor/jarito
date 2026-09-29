@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { ExternalLink, ClipboardPaste } from 'lucide-react';
 import type { Jarito } from '../hooks/useJarito';
-import { canvasCalendarUrl, canvasHost } from '../lib/school';
+import { schoolCalendarUrl, schoolHost } from '../lib/school';
+import type { Platform } from '../lib/canvasIcs';
+import { usePersistedChoice } from '../hooks/usePersistedChoice';
 import { FeedGuide } from './FeedGuide';
+import { BrightspaceGuide } from './BrightspaceGuide';
 import { isStandalone } from '../lib/platform';
 
 const SCHOOL_KEY = 'jarito:school';
@@ -14,8 +17,14 @@ export function Connect({ jarito }: { jarito: Jarito }) {
   });
   const [pasteFailed, setPasteFailed] = useState(false);
 
-  const calendarUrl = canvasCalendarUrl(school);
-  const host = canvasHost(school) ?? 'yourschool.instructure.com';
+  const [platform, setPlatform] = usePersistedChoice<Platform>('jarito:platform', ['canvas', 'brightspace'], 'canvas');
+  const canvas = platform === 'canvas';
+  const lms = canvas ? 'Canvas' : 'Brightspace';
+  const calendarUrl = schoolCalendarUrl(school, platform);
+  const host = schoolHost(school, platform) ?? (canvas ? 'yourschool.instructure.com' : 'yourschool.brightspace.com');
+  const feedPlaceholder = canvas
+    ? `https://${host}/feeds/calendars/user_….ics`
+    : `https://${host}/d2l/le/calendar/feed/user/feed.ics?token=…`;
 
   const rememberSchool = () => {
     try { localStorage.setItem(SCHOOL_KEY, school.trim()); } catch { /* optional */ }
@@ -40,9 +49,9 @@ export function Connect({ jarito }: { jarito: Jarito }) {
     <main className="connect">
       {installed && (
         <section className="welcome" aria-labelledby="welcome-title">
-          <h2 id="welcome-title">Connect Canvas in the app</h2>
+          <h2 id="welcome-title">Connect your calendar in the app</h2>
           <p>
-            Your phone keeps the home-screen app separate from your browser, so it needs your Canvas
+            Your phone keeps the home-screen app separate from your browser, so it needs your calendar
             link once more. If you copied it, tap below. Otherwise follow the steps further down.
           </p>
           <button type="button" className="btn btn-primary btn-wide" onClick={paste} disabled={jarito.syncing}>
@@ -54,18 +63,35 @@ export function Connect({ jarito }: { jarito: Jarito }) {
         </section>
       )}
 
-      <h1 className="connect-title">Keeps watch over your Canvas deadlines.</h1>
+      <h1 className="connect-title">Keeps watch over your course deadlines.</h1>
       <p className="connect-lede">
         Everything due across all your courses in one list, and a heads-up the moment a
-        professor moves a date. Free, and no account to make.
+        professor moves a date. Works with Canvas and Brightspace. Free, and no account to make.
       </p>
+
+      <fieldset className="platform">
+        <legend>My school uses</legend>
+        <div className="platform-options">
+          <label>
+            <input type="radio" name="platform" value="canvas" checked={canvas} onChange={() => setPlatform('canvas')} />
+            <span>Canvas</span>
+          </label>
+          <label>
+            <input type="radio" name="platform" value="brightspace" checked={!canvas} onChange={() => setPlatform('brightspace')} />
+            <span>Brightspace / D2L <span className="beta">Beta</span></span>
+          </label>
+        </div>
+      </fieldset>
 
       <ol className="setup">
         <li className="setup-step">
-          <h2 className="setup-title">Open your Canvas calendar</h2>
-          <p className="setup-help">Type your school’s Canvas address, or just the school name if it’s on Instructure.</p>
+          <h2 className="setup-title">{canvas ? 'Open your Canvas calendar' : 'Open Brightspace, then Calendar'}</h2>
+          <p className="setup-help">
+            Type your school’s {lms} address, or just the school name if it ends in
+            {canvas ? ' instructure.com' : ' brightspace.com'}.
+          </p>
           <div className="field-row">
-            <label htmlFor="school" className="sr-only">Your school’s Canvas address</label>
+            <label htmlFor="school" className="sr-only">Your school’s {lms} address</label>
             <input
               id="school"
               type="text"
@@ -73,7 +99,7 @@ export function Connect({ jarito }: { jarito: Jarito }) {
               autoComplete="off"
               autoCapitalize="none"
               spellCheck={false}
-              placeholder="sfsu.instructure.com"
+              placeholder={canvas ? 'sfsu.instructure.com' : 'yourschool.brightspace.com'}
               value={school}
               onChange={e => setSchool(e.target.value)}
             />
@@ -85,17 +111,29 @@ export function Connect({ jarito }: { jarito: Jarito }) {
               aria-disabled={!calendarUrl}
               onClick={e => { if (!calendarUrl) e.preventDefault(); else rememberSchool(); }}
             >
-              Open my Canvas calendar <ExternalLink size={15} aria-hidden="true" />
+              {canvas ? 'Open my Canvas calendar' : 'Open my Brightspace'} <ExternalLink size={15} aria-hidden="true" />
             </a>
           </div>
           <p className="note">
-            On a phone, use your browser rather than the Canvas app; the app doesn’t show the feed link.
+            {canvas
+              ? 'On a phone, use your browser rather than the Canvas app; the app doesn’t show the feed link.'
+              : 'In Brightspace, click Calendar in the top menu (or the Calendar widget on your homepage). Use a browser, not the Pulse app.'}
           </p>
         </li>
 
         <li className="setup-step">
-          <h2 className="setup-title">Click <em>Calendar Feed</em> and copy the link</h2>
-          <FeedGuide host={host} />
+          {canvas ? (
+            <>
+              <h2 className="setup-title">Click <em>Calendar Feed</em> and copy the link</h2>
+              <FeedGuide host={host} />
+            </>
+          ) : (
+            <>
+              <h2 className="setup-title">Click <em>Subscribe</em> and copy the link</h2>
+              <p className="setup-help">Pick <strong>All Calendars and Tasks</strong> so every course is included.</p>
+              <BrightspaceGuide host={host} />
+            </>
+          )}
         </li>
 
         <li className="setup-step">
@@ -115,7 +153,7 @@ export function Connect({ jarito }: { jarito: Jarito }) {
                 inputMode="url"
                 autoComplete="off"
                 spellCheck={false}
-                placeholder={`https://${host}/feeds/calendars/user_….ics`}
+                placeholder={feedPlaceholder}
                 value={draft}
                 onChange={e => setDraft(e.target.value)}
                 aria-describedby="feed-note"
@@ -125,8 +163,8 @@ export function Connect({ jarito }: { jarito: Jarito }) {
             </div>
             {!installed && jarito.error && <p className="error" role="alert">{jarito.error}</p>}
             <p id="feed-note" className="note">
-              The link is saved only in this browser. Anyone who has it can see your Canvas calendar,
-              so treat it like a password. You can reset it in Canvas at any time.
+              The link is saved only in this browser. Anyone who has it can see your {lms} calendar,
+              so treat it like a password. You can reset it in {lms} at any time.
             </p>
           </form>
         </li>

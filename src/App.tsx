@@ -46,7 +46,7 @@ export default function App() {
             You’re looking at sample coursework. Press <strong>Check now</strong> to see what Jarito
             shows when a professor moves a deadline.
           </p>
-          <button className="btn btn-primary" onClick={jarito.disconnect}>Use my own Canvas</button>
+          <button className="btn btn-primary" onClick={jarito.disconnect}>Use my own calendar</button>
         </div>
       )}
 
@@ -70,7 +70,7 @@ export default function App() {
           <a href="https://github.com/Davisoduor/jarito">Source on GitHub</a>
           <a href="/privacy">Privacy</a>
         </p>
-        <p className="footer-fine">Not affiliated with Instructure or Canvas.</p>
+        <p className="footer-fine">Not affiliated with Instructure, Canvas, D2L or Brightspace.</p>
       </footer>
     </div>
   );

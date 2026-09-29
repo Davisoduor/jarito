@@ -7,6 +7,12 @@ const ICS = 'BEGIN:VCALENDAR\nEND:VCALENDAR\n';
 const stub = (res: Response) => (async () => res) as unknown as typeof fetch;
 
 describe('isAllowedFeed', () => {
+  it('accepts Brightspace feeds with a token', () => {
+    expect(isAllowedFeed('https://school.brightspace.com/d2l/le/calendar/feed/user/feed.ics?feedOU=6606&token=abc123def456')).toBe(true);
+    expect(isAllowedFeed('webcal://learn.school.edu/d2l/le/calendar/feed/user/feed.ics?token=abc123def456')).toBe(true);
+    expect(isAllowedFeed('https://10.0.0.1/d2l/le/calendar/feed/user/feed.ics?token=abc123def456')).toBe(false);
+  });
+
   it('accepts Instructure-hosted and school-hosted Canvas feeds', () => {
     expect(isAllowedFeed(GOOD)).toBe(true);
     expect(isAllowedFeed('https://canvas.school.edu/feeds/calendars/user_Xy9.ics')).toBe(true);

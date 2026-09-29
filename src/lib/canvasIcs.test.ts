@@ -1,6 +1,6 @@
 import {
   unfold, unescapeText, parseSummary, parseDateValue, parseCanvasIcs,
-  assignmentHash, diffAssignments, buildSeenMap, isCanvasFeedUrl,
+  assignmentHash, diffAssignments, buildSeenMap, isFeedUrl, feedPlatform, normalizeFeedUrl, shortCourse,
   type CanvasAssignment,
 } from './canvasIcs';
 
@@ -211,14 +211,51 @@ describe('assignmentHash', () => {
   });
 });
 
-describe('isCanvasFeedUrl', () => {
-  it('accepts a real Canvas feed URL', () => {
-    expect(isCanvasFeedUrl('https://sfsu.instructure.com/feeds/calendars/user_AbC123.ics')).toBe(true);
+describe('feed links', () => {
+  const BS = 'https://school.brightspace.com/d2l/le/calendar/feed/user/feed.ics?token=abc123def456';
+
+  it('recognises Canvas and Brightspace feeds', () => {
+    expect(feedPlatform('https://sfsu.instructure.com/feeds/calendars/user_AbC123.ics')).toBe('canvas');
+    expect(feedPlatform(BS)).toBe('brightspace');
+    expect(feedPlatform(BS.replace('?', '?feedOU=6606&'))).toBe('brightspace');
+    expect(feedPlatform('webcal://learn.school.edu/d2l/le/calendar/feed/user/feed.ics?token=abc123def456')).toBe('brightspace');
   });
 
-  it('rejects anything that is not a Canvas feed', () => {
-    expect(isCanvasFeedUrl('https://example.com/evil.ics')).toBe(false);
-    expect(isCanvasFeedUrl('http://sfsu.instructure.com/feeds/calendars/user_x.ics')).toBe(false);
-    expect(isCanvasFeedUrl('https://sfsu.instructure.com/courses/1')).toBe(false);
+  it('rejects anything else', () => {
+    expect(isFeedUrl('https://example.com/evil.ics')).toBe(false);
+    expect(isFeedUrl('http://sfsu.instructure.com/feeds/calendars/user_x.ics')).toBe(false);
+    expect(isFeedUrl('https://sfsu.instructure.com/courses/1')).toBe(false);
+    expect(isFeedUrl('https://sfsu.instructure.com/feeds/calendars/user_x.ics?a=1')).toBe(false);
+    expect(isFeedUrl('https://school.brightspace.com/d2l/le/calendar/feed/user/feed.ics')).toBe(false);
+    expect(isFeedUrl(BS + '&redirect=https://evil.example')).toBe(false);
+    expect(isFeedUrl(BS.replace('?', '?feedOU=abc&'))).toBe(false);
+  });
+
+  it('turns webcal into https', () => {
+    expect(normalizeFeedUrl(' webcal://a.b/c ')).toBe('https://a.b/c');
+  });
+});
+
+describe('Brightspace events', () => {
+  const EVENT = [
+    'BEGIN:VCALENDAR', 'BEGIN:VEVENT',
+    'UID:6606-12345@school.brightspace.com',
+    'DTSTART:20261002T035900Z',
+    'SUMMARY:Lab Report 2 - Due',
+    'LOCATION:BIO 101 - Introduction to Biology - Fall 2026',
+    'DESCRIPTION:Submit to the dropbox.',
+    'END:VEVENT', 'END:VCALENDAR',
+  ].join('\r\n');
+
+  it('takes the course from LOCATION and drops the "- Due" suffix', () => {
+    const [a] = parseCanvasIcs(EVENT);
+    expect(a.title).toBe('Lab Report 2');
+    expect(a.course).toBe('BIO-101');
+    expect(a.description).toBe('Submit to the dropbox.');
+  });
+
+  it('shortens long course names without a code', () => {
+    expect(shortCourse('Academic Integrity Tutorial for All New Undergraduate Students')).toMatch(/…$/);
+    expect(shortCourse('CHEM 2301 - Organic Chemistry')).toBe('CHEM-2301');
   });
 });

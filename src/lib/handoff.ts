@@ -1,4 +1,4 @@
-import { isCanvasFeedUrl } from './canvasIcs';
+import { isFeedUrl } from './canvasIcs';
 
 // Moving to another device without retyping a 70-character link. The feed URL
 // rides in the fragment (#feed=...), which browsers never send to a server, so
@@ -18,5 +18,5 @@ export function readFeedFromHash(hash: string): string | null {
   } catch {
     return null;
   }
-  return isCanvasFeedUrl(url) ? url : null;
+  return isFeedUrl(url) ? url : null;
 }
