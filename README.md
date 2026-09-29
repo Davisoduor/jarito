@@ -8,13 +8,13 @@ Jarito puts every assignment from every Canvas course into one list, sorted by w
 next, and tells you the moment a professor moves a due date, posts something new, or changes
 the brief. Canvas updates the date quietly; Jarito says so out loud.
 
-*Jarito* (ja-REE-toh) is Dholuo for "the one who keeps watch."
-
 ## Using it
 
-1. In Canvas, open **Calendar**, then click **Calendar Feed** (bottom right) and copy the link.
-2. Paste it into Jarito.
-3. Add it to your home screen (Share → Add to Home Screen on iPhone; the install prompt on
+1. Type your school's Canvas address (or just the school name) and press **Open my Canvas
+   calendar**.
+2. Click **Calendar Feed** at the bottom right of the calendar page and copy the link.
+3. Press **Paste link and start watching**.
+4. Add it to your home screen (Share → Add to Home Screen on iPhone; the install prompt on
    Android/Chrome) so checking is one tap. Use **Open on my phone** to move to your phone
    by scanning a code instead of retyping the link.
 

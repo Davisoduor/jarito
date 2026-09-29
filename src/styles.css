@@ -152,34 +152,6 @@ a { color: inherit; }
   color: var(--muted);
 }
 
-.steps {
-  counter-reset: step;
-  list-style: none;
-  margin: 36px 0 0;
-  padding: 0;
-  display: grid;
-  gap: 12px;
-}
-.steps li {
-  counter-increment: step;
-  display: grid;
-  grid-template-columns: 32px 1fr;
-  align-items: baseline;
-  font-size: 17px;
-}
-.steps li::before {
-  content: counter(step);
-  font-weight: 800;
-  color: var(--lake);
-}
-
-.connect-form {
-  margin-top: 28px;
-  padding: 20px;
-  background: var(--surface);
-  border: 1.5px solid var(--line);
-  border-radius: 16px;
-}
 .field-label {
   display: block;
   font-size: 15px;
@@ -187,7 +159,7 @@ a { color: inherit; }
   margin-bottom: 8px;
 }
 .field-row { display: flex; flex-direction: column; gap: 10px; }
-.field-row input {
+.field-row input, .setup input {
   width: 100%;
   min-height: 48px;
   padding: 0 14px;
@@ -209,17 +181,6 @@ a { color: inherit; }
 
 .error { margin: 12px 0 0; color: var(--red); font-weight: 600; font-size: 15px; }
 .note { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
-
-.meaning {
-  margin-top: 40px;
-  padding-left: 16px;
-  border-left: 3px solid var(--lantern);
-  max-width: 34rem;
-  color: var(--muted);
-  font-size: 16px;
-}
-.meaning p { margin: 0; }
-.meaning strong { color: var(--ink); }
 
 /* ---- Watch: next up --------------------------------------------------- */
 
@@ -517,3 +478,72 @@ a { color: inherit; }
 .demo-bar p { margin: 0; flex: 1 1 18rem; }
 .demo-bar .btn-primary { background: var(--lake-ink); color: var(--lake); border-color: var(--lake-ink); }
 .demo-bar + .status { margin-top: 10px; }
+
+/* ---- Setup steps ------------------------------------------------------ */
+
+.setup {
+  counter-reset: step;
+  list-style: none;
+  margin: 36px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.setup-step {
+  counter-increment: step;
+  position: relative;
+  padding: 20px 20px 20px 62px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+}
+.setup-step::before {
+  content: counter(step);
+  position: absolute;
+  left: 18px;
+  top: 17px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--lake);
+  color: var(--lake-ink);
+  font-weight: 800;
+  font-size: 15px;
+}
+.setup-title { margin: 3px 0 0; font-size: 19px; line-height: 1.3; letter-spacing: -0.01em; }
+.setup-title em { font-style: normal; color: var(--lake); }
+.setup-help { margin: 4px 0 12px; color: var(--muted); font-size: 15px; }
+.setup-step form { margin-top: 14px; }
+.btn.is-disabled { opacity: 0.55; cursor: not-allowed; }
+a.btn { text-decoration: none; justify-content: center; }
+.btn-wide { width: 100%; justify-content: center; min-height: 52px; font-size: 16px; }
+.or-label { display: block; margin: 14px 0 8px; font-size: 14px; color: var(--muted); }
+
+@media (max-width: 520px) {
+  .setup-step { padding: 18px 16px; }
+  .setup-step::before { position: static; margin-bottom: 10px; }
+}
+
+/* ---- Feed guide drawing ------------------------------------------------ */
+
+.guide { margin: 14px 0 0; }
+.guide svg { display: block; width: 100%; height: auto; }
+.guide figcaption { margin-top: 10px; font-size: 14px; color: var(--muted); }
+.guide figcaption strong { color: var(--ink); }
+.g-window { fill: var(--bg); stroke: var(--line); stroke-width: 1.5; }
+.g-chrome { fill: var(--line); opacity: 0.6; }
+.g-faint { fill: var(--muted); opacity: 0.28; }
+.g-url { fill: var(--surface); }
+.g-url-text { font-size: 10px; fill: var(--muted); }
+.g-nav { fill: var(--lake); opacity: 0.14; }
+.g-nav-on { fill: var(--lake); opacity: 0.35; }
+.g-heading { font-size: 13px; font-weight: 800; fill: var(--ink); }
+.g-small-heading { font-size: 10px; font-weight: 700; fill: var(--muted); }
+.g-cell { fill: var(--surface); stroke: var(--line); }
+.g-rule { stroke: var(--line); }
+.g-ring { fill: var(--lantern-wash); stroke: var(--lantern); stroke-width: 2.5; }
+.g-link { font-size: 12px; font-weight: 700; fill: var(--lake); text-decoration: underline; }
+.g-arrow { fill: none; stroke: var(--lantern); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.g-callout { font-size: 13px; font-weight: 700; fill: var(--lantern-ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; }
