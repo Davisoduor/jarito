@@ -3,6 +3,7 @@ import { ExternalLink, ClipboardPaste } from 'lucide-react';
 import type { Jarito } from '../hooks/useJarito';
 import { canvasCalendarUrl, canvasHost } from '../lib/school';
 import { FeedGuide } from './FeedGuide';
+import { isStandalone } from '../lib/platform';
 
 const SCHOOL_KEY = 'jarito:school';
 
@@ -33,8 +34,26 @@ export function Connect({ jarito }: { jarito: Jarito }) {
     }
   };
 
+  const installed = isStandalone();
+
   return (
     <main className="connect">
+      {installed && (
+        <section className="welcome" aria-labelledby="welcome-title">
+          <h2 id="welcome-title">Connect Canvas in the app</h2>
+          <p>
+            Your phone keeps the home-screen app separate from your browser, so it needs your Canvas
+            link once more. If you copied it, tap below. Otherwise follow the steps further down.
+          </p>
+          <button type="button" className="btn btn-primary btn-wide" onClick={paste} disabled={jarito.syncing}>
+            <ClipboardPaste size={17} aria-hidden="true" />
+            {jarito.syncing ? 'Reading your calendar…' : 'Paste link'}
+          </button>
+          {pasteFailed && <p className="note">Pasting was blocked. Use the box in step 3 below instead.</p>}
+          {jarito.error && <p className="error" role="alert">{jarito.error}</p>}
+        </section>
+      )}
+
       <h1 className="connect-title">Keeps watch over your Canvas deadlines.</h1>
       <p className="connect-lede">
         Everything due across all your courses in one list, and a heads-up the moment a
@@ -104,7 +123,7 @@ export function Connect({ jarito }: { jarito: Jarito }) {
               />
               <button className="btn" type="submit" disabled={jarito.syncing || !draft.trim()}>Start watching</button>
             </div>
-            {jarito.error && <p className="error" role="alert">{jarito.error}</p>}
+            {!installed && jarito.error && <p className="error" role="alert">{jarito.error}</p>}
             <p id="feed-note" className="note">
               The link is saved only in this browser. Anyone who has it can see your Canvas calendar,
               so treat it like a password. You can reset it in Canvas at any time.

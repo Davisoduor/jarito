@@ -58,7 +58,7 @@ export default function App() {
         </p>
       )}
 
-      {jarito.connected && !jarito.isDemo && <InstallHint />}
+      {jarito.connected && !jarito.isDemo && <InstallHint feedUrl={state.feedUrl} />}
       {jarito.connected ? <Watch jarito={jarito} /> : <Connect jarito={jarito} />}
 
       <footer className="footer">

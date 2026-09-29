@@ -547,3 +547,22 @@ a.btn { text-decoration: none; justify-content: center; }
 .g-link { font-size: 12px; font-weight: 700; fill: var(--lake); text-decoration: underline; }
 .g-arrow { fill: none; stroke: var(--lantern); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .g-callout { font-size: 13px; font-weight: 700; fill: var(--lantern-ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; }
+
+/* ---- Home-screen app ---------------------------------------------------- */
+
+.welcome {
+  margin: 0 0 32px;
+  padding: 20px;
+  border: 2px solid var(--lake);
+  border-radius: 16px;
+  background: var(--surface);
+}
+.welcome h2 { margin: 0; font-size: 20px; letter-spacing: -0.01em; }
+.welcome p { margin: 6px 0 14px; color: var(--muted); font-size: 15px; }
+.welcome .note, .welcome .error { margin: 12px 0 0; }
+
+.install-ios { display: block; }
+.install-lead { margin: 0; font-weight: 700; }
+.install-steps { margin: 10px 0 0; padding-left: 22px; display: grid; gap: 8px; }
+.install-steps li::marker { font-weight: 800; color: var(--lake); }
+.install-dismiss { margin: 6px 0 0 -10px; }
