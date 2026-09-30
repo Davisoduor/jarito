@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ExternalLink, ClipboardPaste } from 'lucide-react';
 import type { Jarito } from '../hooks/useJarito';
 import { schoolCalendarUrl, schoolHost } from '../lib/school';
-import type { Platform } from '../lib/canvasIcs';
+import { feedPlatform, normalizeFeedUrl, type Platform } from '../lib/canvasIcs';
 import { usePersistedChoice } from '../hooks/usePersistedChoice';
 import { FeedGuide } from './FeedGuide';
 import { BrightspaceGuide } from './BrightspaceGuide';
@@ -20,6 +20,9 @@ export function Connect({ jarito }: { jarito: Jarito }) {
   const [platform, setPlatform] = usePersistedChoice<Platform>('jarito:platform', ['canvas', 'brightspace'], 'canvas');
   const canvas = platform === 'canvas';
   const lms = canvas ? 'Canvas' : 'Brightspace';
+  // People often paste the feed link itself into the school box. That's the
+  // finished article, so offer to start watching right there.
+  const feedInSchool = feedPlatform(school) ? normalizeFeedUrl(school) : null;
   const calendarUrl = schoolCalendarUrl(school, platform);
   const host = schoolHost(school, platform) ?? (canvas ? 'yourschool.instructure.com' : 'yourschool.brightspace.com');
   const feedPlaceholder = canvas
@@ -27,7 +30,16 @@ export function Connect({ jarito }: { jarito: Jarito }) {
     : `https://${host}/d2l/le/calendar/feed/user/feed.ics?token=…`;
 
   const rememberSchool = () => {
+    // Never keep a feed link here; it's a credential and belongs only in the connected state.
+    if (feedInSchool) return;
     try { localStorage.setItem(SCHOOL_KEY, school.trim()); } catch { /* optional */ }
+  };
+
+  const watchFromSchoolBox = () => {
+    if (!feedInSchool) return;
+    try { localStorage.removeItem(SCHOOL_KEY); } catch { /* optional */ }
+    setPlatform(feedPlatform(feedInSchool)!);
+    jarito.connect(feedInSchool);
   };
 
   const paste = async () => {
@@ -103,17 +115,29 @@ export function Connect({ jarito }: { jarito: Jarito }) {
               value={school}
               onChange={e => setSchool(e.target.value)}
             />
-            <a
-              className={`btn btn-primary${calendarUrl ? '' : ' is-disabled'}`}
-              href={calendarUrl ?? undefined}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-disabled={!calendarUrl}
-              onClick={e => { if (!calendarUrl) e.preventDefault(); else rememberSchool(); }}
-            >
-              {canvas ? 'Open my Canvas calendar' : 'Open my Brightspace'} <ExternalLink size={15} aria-hidden="true" />
-            </a>
+            {feedInSchool ? (
+              <button type="button" className="btn btn-primary" onClick={watchFromSchoolBox} disabled={jarito.syncing}>
+                {jarito.syncing ? 'Reading your calendar…' : 'Start watching'}
+              </button>
+            ) : (
+              <a
+                className={`btn btn-primary${calendarUrl ? '' : ' is-disabled'}`}
+                href={calendarUrl ?? undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-disabled={!calendarUrl}
+                onClick={e => { if (!calendarUrl) e.preventDefault(); else rememberSchool(); }}
+              >
+                {canvas ? 'Open my Canvas calendar' : 'Open my Brightspace'} <ExternalLink size={15} aria-hidden="true" />
+              </a>
+            )}
           </div>
+          {feedInSchool && (
+            <p className="found" role="status">
+              That’s your calendar feed link, so you can skip the rest. Press <strong>Start watching</strong>.
+            </p>
+          )}
+          {feedInSchool && jarito.error && <p className="error" role="alert">{jarito.error}</p>}
           <p className="note">
             {canvas
               ? 'On a phone, use your browser rather than the Canvas app; the app doesn’t show the feed link.'

@@ -56,6 +56,7 @@ export function Watch({ jarito }: { jarito: Jarito }) {
 
   return (
     <main className="watch">
+      <div className="watch-side">
       <section className="next" aria-label="Next up">
         {next ? (
           <>
@@ -80,7 +81,9 @@ export function Watch({ jarito }: { jarito: Jarito }) {
       </section>
 
       {state.changes.length > 0 && <Report changes={state.changes} onDismiss={jarito.dismissChanges} />}
+      </div>
 
+      <div className="watch-main">
       <div className="controls">
         <div className="tabs" role="tablist" aria-label="Show">
           {VIEWS.map(v => (
@@ -132,6 +135,7 @@ export function Watch({ jarito }: { jarito: Jarito }) {
           </section>
         ))
       )}
+      </div>
 
       {!jarito.isDemo && <section className="device" aria-labelledby="device-title">
         <h2 id="device-title">This device</h2>
