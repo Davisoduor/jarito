@@ -46,9 +46,14 @@ export function Watch({ jarito }: { jarito: Jarito }) {
     : view === 'done' ? inCourse.filter(a => statusOf(a.uid) === 'Done').sort((a, b) => byDue(b, a))
     : [...inCourse].sort(byDue);
 
+  // Date buckets hold unfinished work only: a finished assignment is not
+  // "Overdue", and counting it there kept the red heading up after it was
+  // ticked. In Everything, finished work gets its own section at the end.
   const groups = new Map<Bucket, CanvasAssignment[]>();
+  const finished = view === 'all' ? visible.filter(a => statusOf(a.uid) === 'Done') : [];
   if (view !== 'done') {
     for (const a of visible) {
+      if (statusOf(a.uid) === 'Done') continue;
       const b = bucketFor(daysUntil(a.due, today));
       groups.set(b, [...(groups.get(b) ?? []), a]);
     }
@@ -109,7 +114,7 @@ export function Watch({ jarito }: { jarito: Jarito }) {
         )}
       </div>
 
-      {visible.length === 0 ? (
+      {visible.length === 0 || (view === 'all' && groups.size === 0 && finished.length === 0) ? (
         <p className="empty">
           {view === 'done' ? 'Nothing marked done yet. Tick an assignment when you submit it.' : 'Nothing left to do here.'}
         </p>
@@ -134,6 +139,19 @@ export function Watch({ jarito }: { jarito: Jarito }) {
             </ul>
           </section>
         ))
+      )}
+      {finished.length > 0 && (
+        <section className="group group-finished" aria-labelledby="g-finished">
+          <h2 id="g-finished" className="group-title">
+            Done<span className="group-count">{finished.length}</span>
+          </h2>
+          <ul className="rows">
+            {finished.map(a => (
+              <AssignmentRow key={a.uid} a={a} status="Done" today={today} moved={false}
+                onStatus={s => jarito.setStatus(a.uid, s)} />
+            ))}
+          </ul>
+        </section>
       )}
       </div>
 

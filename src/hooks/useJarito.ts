@@ -66,7 +66,7 @@ export function useJarito() {
         // Accumulate: a change seen yesterday and not yet dismissed still matters today.
         changes: isBaseline ? [] : dedupeChanges([...fresh, ...s.changes]),
         lastSyncedAt: new Date().toISOString(),
-        status: pruneStatus(s.status, assignments),
+        status: carryStatus(s.status, s.assignments, assignments),
       }));
       setError(null);
     } catch (err) {
@@ -151,14 +151,30 @@ async function fetchIcs(feedUrl: string): Promise<string> {
   return (await res.json()).ics;
 }
 
-function pruneStatus(
+/**
+ * Keeps what the student has ticked off across a sync.
+ *
+ * Status is keyed by the feed's UID, which Canvas keeps stable. If a feed
+ * ever hands the same assignment a new UID (not ruled out for Brightspace),
+ * the tick is carried over by matching title and course, rather than the
+ * assignment silently reappearing as not done. Status for assignments that
+ * no longer exist is dropped.
+ */
+export function carryStatus(
   status: Record<string, CourseworkStatus>,
-  assignments: CanvasAssignment[],
+  before: CanvasAssignment[],
+  after: CanvasAssignment[],
 ): Record<string, CourseworkStatus> {
-  const live = new Set(assignments.map(a => a.uid));
+  const key = (a: CanvasAssignment) => `${a.title}|${a.course}`;
+  const byKey = new Map<string, CourseworkStatus>();
+  for (const a of before ?? []) {
+    const s = status?.[a.uid];
+    if (s) byKey.set(key(a), s);
+  }
   const next: Record<string, CourseworkStatus> = {};
-  for (const [uid, value] of Object.entries(status ?? {})) {
-    if (live.has(uid)) next[uid] = value;
+  for (const a of after) {
+    const s = status?.[a.uid] ?? byKey.get(key(a));
+    if (s) next[a.uid] = s;
   }
   return next;
 }

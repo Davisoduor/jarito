@@ -227,7 +227,7 @@ a { color: inherit; }
   gap: 12px;
 }
 .report-head h2 { margin: 6px 0 0; font-size: 18px; line-height: 1.3; }
-.report-head .btn-quiet { color: var(--lantern-ink); text-decoration: underline; text-underline-offset: 3px; }
+.report-head .btn-quiet { white-space: nowrap; flex-shrink: 0; color: var(--lantern-ink); text-decoration: underline; text-underline-offset: 3px; }
 .report-list { list-style: none; margin: 10px 0 0; padding: 0; }
 .report-row {
   display: grid;
