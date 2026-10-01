@@ -6,6 +6,7 @@ import type { CanvasAssignment } from '../lib/canvasIcs';
 import { AssignmentRow } from './AssignmentRow';
 import { Report } from './Report';
 import { PhoneHandoff } from './PhoneHandoff';
+import { SharePanel } from './SharePanel';
 
 type View = 'todo' | 'done' | 'all';
 const VIEWS: { id: View; label: string }[] = [
@@ -166,6 +167,8 @@ export function Watch({ jarito }: { jarito: Jarito }) {
           <button className="btn btn-quiet" onClick={jarito.disconnect}>Disconnect calendar</button>
         </div>
       </section>}
+
+      {!jarito.isDemo && <SharePanel />}
 
       {phoneOpen && <PhoneHandoff feedUrl={state.feedUrl} onClose={() => setPhoneOpen(false)} />}
     </main>

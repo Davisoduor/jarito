@@ -2,7 +2,7 @@
   "name": "jarito",
   "version": "0.1.0",
   "private": true,
-  "description": "Keeps watch over your Canvas deadlines. Free, no account, open source.",
+  "description": "Watches Canvas and Brightspace for moved deadlines. Free, no account, open source.",
   "license": "MIT",
   "type": "module",
   "scripts": {

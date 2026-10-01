@@ -75,10 +75,10 @@ export function Connect({ jarito }: { jarito: Jarito }) {
         </section>
       )}
 
-      <h1 className="connect-title">Keeps watch over your course deadlines.</h1>
+      <h1 className="connect-title">Never miss a moved deadline again.</h1>
       <p className="connect-lede">
-        Everything due across all your courses in one list, and a heads-up the moment a
-        professor moves a date. Works with Canvas and Brightspace. Free, and no account to make.
+        Jarito watches your course calendar and tells you when an assignment date changes.
+        Works with Canvas and Brightspace. Free, and no account to make.
       </p>
 
       <fieldset className="platform">
@@ -94,6 +94,32 @@ export function Connect({ jarito }: { jarito: Jarito }) {
           </label>
         </div>
       </fieldset>
+
+      <section className="shortcut" aria-labelledby="shortcut-title">
+        <div>
+          <h2 id="shortcut-title">Already have your calendar feed link?</h2>
+          <p>Paste it here and skip the directions. Jarito will detect Canvas or Brightspace.</p>
+        </div>
+        <form className="shortcut-form" onSubmit={e => { e.preventDefault(); jarito.connect(draft); }}>
+          <button type="button" className="btn btn-primary" onClick={paste} disabled={jarito.syncing}>
+            <ClipboardPaste size={17} aria-hidden="true" />
+            {jarito.syncing ? 'Reading your calendar…' : 'Paste link'}
+          </button>
+          <input
+            type="url"
+            inputMode="url"
+            autoComplete="off"
+            spellCheck={false}
+            placeholder="or paste the link here"
+            value={draft}
+            onChange={e => setDraft(e.target.value)}
+            aria-label="Calendar feed link"
+          />
+          <button className="btn" type="submit" disabled={jarito.syncing || !draft.trim()}>Start watching</button>
+        </form>
+        {pasteFailed && <p className="note">Your browser blocked pasting. Paste into the box instead.</p>}
+        {!installed && jarito.error && <p className="error" role="alert">{jarito.error}</p>}
+      </section>
 
       <ol className="setup">
         <li className="setup-step">
@@ -142,6 +168,8 @@ export function Connect({ jarito }: { jarito: Jarito }) {
             {canvas
               ? 'On a phone, use your browser rather than the Canvas app; the app doesn’t show the feed link.'
               : 'In Brightspace, click Calendar in the top menu (or the Calendar widget on your homepage). Use a browser, not the Pulse app.'}
+            {' '}
+            <a href={canvas ? '/canvas' : '/brightspace'}>{canvas ? 'Open the Canvas guide.' : 'Open the Brightspace guide.'}</a>
           </p>
         </li>
 

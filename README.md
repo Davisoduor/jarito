@@ -12,17 +12,24 @@ the brief. Your school's system updates the date quietly; Jarito says so out lou
 
 **Canvas**
 
-1. Type your school's Canvas address (or just the school name) and press **Open my Canvas
-   calendar**.
-2. Click **Calendar Feed** at the bottom right of the calendar page and copy the link.
-3. Press **Paste link and start watching**.
+1. Open Jarito and choose **Canvas**.
+2. If you already copied the feed link, paste it into the first box and press **Start watching**.
+3. If not, type your school's Canvas address and press **Open my Canvas calendar**.
+4. Click **Calendar Feed** at the bottom right of the calendar page.
+5. Copy the whole link and press **Paste link and start watching** in Jarito.
+
+Full guide: [jarito.vercel.app/canvas](https://jarito.vercel.app/canvas).
 
 **Brightspace / D2L (beta)**
 
-1. Open Brightspace and go to **Calendar**.
-2. Click **Subscribe**, choose **All Calendars and Tasks**, and copy the link. No Subscribe
+1. Open Jarito and choose **Brightspace / D2L**.
+2. If you already copied the feed link, paste it into the first box and press **Start watching**.
+3. If not, open Brightspace and go to **Calendar**.
+4. Click **Subscribe**, choose **All Calendars and Tasks**, and copy the link. No Subscribe
    button? In Calendar **Settings**, tick **Enable Calendar Feeds** and save.
-3. Press **Paste link and start watching**.
+5. Press **Paste link and start watching** in Jarito.
+
+Full guide: [jarito.vercel.app/brightspace](https://jarito.vercel.app/brightspace).
 
 Brightspace support is in beta: the parser was written from D2L's documented feed format and
 hasn't been checked against as many real feeds as Canvas has. If something looks wrong,
@@ -44,6 +51,12 @@ Every time you open it, Jarito re-reads your feed and compares it with last time
 - The phone hand-off puts the link after `#` in the URL, which browsers never send to a server.
 
 Full details: [jarito.vercel.app/privacy](https://jarito.vercel.app/privacy).
+
+## Support
+
+Jarito is free for students. The support page is at
+[jarito.vercel.app/support](https://jarito.vercel.app/support) and is ready for a donation
+checkout link when one is connected.
 
 ## How it works
 
@@ -79,5 +92,5 @@ in-function limiter only covers a single instance.
 
 ## Credits
 
-Built by [Davis Oduor](https://davisoduor.me) · [Oduor Web Services](https://oduorwebservices.com).
-Not affiliated with Instructure, Canvas, D2L or Brightspace. MIT licensed.
+Jarito is an independent open source student tool. Not affiliated with Instructure,
+Canvas, D2L or Brightspace. MIT licensed.

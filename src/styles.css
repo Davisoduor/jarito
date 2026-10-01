@@ -181,6 +181,36 @@ a { color: inherit; }
 
 .error { margin: 12px 0 0; color: var(--red); font-weight: 600; font-size: 15px; }
 .note { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+.note a { font-weight: 700; color: var(--lake); text-underline-offset: 3px; }
+
+.shortcut {
+  margin: 28px 0 0;
+  padding: 18px;
+  border: 2px solid var(--lake);
+  border-radius: 16px;
+  background: var(--surface);
+}
+.shortcut h2 { margin: 0; font-size: 20px; letter-spacing: -0.01em; }
+.shortcut p { margin: 5px 0 0; color: var(--muted); font-size: 15px; }
+.shortcut-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+.shortcut-form input {
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+
+@media (min-width: 760px) {
+  .shortcut-form { grid-template-columns: auto minmax(0, 1fr) auto; }
+}
 
 /* ---- Watch: next up --------------------------------------------------- */
 
@@ -390,6 +420,17 @@ a { color: inherit; }
 .device p { margin: 6px 0 0; max-width: 34rem; }
 .device-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 
+.share-panel {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+.share-panel h2 { margin: 0; font-size: 18px; letter-spacing: -0.01em; }
+.share-panel p { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+.share-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
 /* ---- Install hint ----------------------------------------------------- */
 
 .install {
@@ -443,6 +484,93 @@ a { color: inherit; }
 .footer-links a + a { margin-left: 16px; }
 .footer a { text-underline-offset: 3px; }
 .footer-fine { font-size: 13px; opacity: 0.85; }
+
+/* ---- Shareable pages -------------------------------------------------- */
+
+.page {
+  padding: 46px 0 12px;
+  max-width: 58rem;
+}
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--lake);
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.page h1 {
+  margin: 0;
+  max-width: 13ch;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+.page-lede {
+  max-width: 42rem;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 20px;
+}
+.page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+.instruction-card,
+.donation-card {
+  margin-top: 32px;
+  padding: 20px;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+.instruction-card h2,
+.donation-card h2 { margin: 0 0 12px; font-size: 22px; letter-spacing: -0.01em; }
+.plain-steps {
+  margin: 0;
+  padding-left: 24px;
+  display: grid;
+  gap: 8px;
+}
+.plain-steps li::marker { color: var(--lake); font-weight: 800; }
+.faq {
+  margin-top: 28px;
+  display: grid;
+  gap: 10px;
+}
+.faq details {
+  padding: 14px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.faq summary { cursor: pointer; font-weight: 700; }
+.faq p { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
+.donation-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.donation-button {
+  min-height: 72px;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  border-radius: 14px;
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 22px;
+}
+.donation-button:hover { border-color: var(--lake); }
+.donation-button.is-disabled { opacity: 0.55; cursor: not-allowed; }
+.support-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
 @media (prefers-reduced-motion: reduce) {
   .spin, .report { animation: none; }
@@ -615,6 +743,6 @@ a.btn { text-decoration: none; justify-content: center; }
   .watch-main { min-width: 0; }
   .watch .next-title { font-size: clamp(2.25rem, 3.6vw, 3.25rem); }
   .watch .controls { padding-top: 0; border-top: 0; border-bottom: 1.5px solid var(--ink); }
-  .device { grid-column: 1 / -1; }
+  .device, .share-panel { grid-column: 1 / -1; }
 }
 .found { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--lantern-wash); color: var(--lantern-ink); font-size: 15px; box-shadow: inset 0 0 0 1.5px var(--lantern); }
