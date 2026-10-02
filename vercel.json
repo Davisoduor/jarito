@@ -3,20 +3,6 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "rewrites": [
-    {
-      "source": "/canvas",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/brightspace",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/support",
-      "destination": "/index.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
