@@ -1,3 +1,4 @@
+import { FEEDBACK_EMAIL, FEEDBACK_MAILTO } from '../lib/feedback';
 import { ClipboardPaste, Heart, MessageSquare, Share2 } from 'lucide-react';
 import { BrightspaceGuide } from './BrightspaceGuide';
 import { FeedGuide } from './FeedGuide';
@@ -5,8 +6,6 @@ import { FeedGuide } from './FeedGuide';
 const SITE = 'https://jarito.app';
 // A Stripe Payment Link where the supporter picks the amount. Public by design.
 const SUPPORT_URL = 'https://buy.stripe.com/dRmaEY6349BQ83a4uh8og01';
-const FEEDBACK_URL =
-  'https://github.com/Davisoduor/jarito/issues/new?title=Jarito%20feedback&body=What%20school%20or%20LMS%20are%20you%20using%3F%0A%0AWhat%20worked%3F%0A%0AWhat%20was%20confusing%3F%0A%0ADid%20Jarito%20catch%20a%20moved%20deadline%3F%0A%0AWhat%20would%20make%20you%20use%20it%20every%20day%3F';
 
 export function CanvasHelp() {
   return (
@@ -118,12 +117,13 @@ export function SupportPage() {
           <a className="btn btn-primary" href={shareHref()} target="_blank" rel="noopener noreferrer">
             <Share2 size={17} aria-hidden="true" /> Share with classmates
           </a>
-          <a className="btn" href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">
+          <a className="btn" href={FEEDBACK_MAILTO}>
             <MessageSquare size={17} aria-hidden="true" /> Send feedback
           </a>
         </div>
         <p className="note">
-          Please do not share your private feed link in feedback. A screenshot of how the list looks is enough.
+          Or write to {FEEDBACK_EMAIL} from any email app. Please don’t include your calendar feed link;
+          a screenshot of how the list looks is enough.
         </p>
       </section>
     </main>

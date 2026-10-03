@@ -33,7 +33,7 @@ Full guide: [jarito.app/brightspace](https://jarito.app/brightspace).
 
 Brightspace support is in beta: the parser was written from D2L's documented feed format and
 hasn't been checked against as many real feeds as Canvas has. If something looks wrong,
-[open an issue](https://github.com/Davisoduor/jarito/issues).
+email [feedback@jarito.app](mailto:feedback@jarito.app) (or open a GitHub issue if you have an account).
 
 **Every day:** add it to your home screen (Share → Add to Home Screen on iPhone; the install
 prompt on Android/Chrome) so checking is one tap. Use **Open on my phone** to move to your phone by scanning a code instead of retyping the link.
