@@ -53,7 +53,7 @@ export function BrightspaceHelp() {
       <p className="eyebrow">Brightspace / D2L setup</p>
       <h1>Turn on calendar feeds, then copy the Subscribe link.</h1>
       <p className="page-lede">
-        Brightspace support is in beta. The best link is <strong>All Calendars and Tasks</strong>,
+        The best link is <strong>All Calendars and Tasks</strong>,
         because that includes every course instead of one class at a time.
       </p>
 
@@ -82,7 +82,7 @@ export function BrightspaceHelp() {
         items={[
           ['I do not see Subscribe. What now?', 'Open Calendar Settings, turn on Enable Calendar Feeds, save, then return to the calendar.'],
           ['Should I choose one course or all courses?', 'Choose All Calendars and Tasks unless you only want Jarito to watch one course.'],
-          ['Why is Brightspace marked beta?', 'Canvas has been tested with real student feeds. Brightspace follows the documented feed format, but we still want reports from more schools.'],
+          ['Something looks wrong for my school.', 'Schools set Brightspace up in slightly different ways. Email feedback@jarito.app with a screenshot of the list (never your feed link) and it will get fixed.'],
         ]}
       />
     </main>

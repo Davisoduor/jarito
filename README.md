@@ -1,6 +1,6 @@
 # Jarito
 
-**Keeps watch over your course deadlines.** Works with Canvas, and with Brightspace / D2L in beta.
+**Keeps watch over your course deadlines.** Works with Canvas and Brightspace / D2L.
 
 **[Try it → jarito.app](https://jarito.app)** · free, no account · [see it with sample coursework](https://jarito.app) if you don't have Canvas or Brightspace
 
@@ -20,7 +20,7 @@ the brief. Your school's system updates the date quietly; Jarito says so out lou
 
 Full guide: [jarito.app/canvas](https://jarito.app/canvas).
 
-**Brightspace / D2L (beta)**
+**Brightspace / D2L**
 
 1. Open Jarito and choose **Brightspace / D2L**.
 2. If you already copied the feed link, paste it into the first box and press **Start watching**.
@@ -31,9 +31,8 @@ Full guide: [jarito.app/canvas](https://jarito.app/canvas).
 
 Full guide: [jarito.app/brightspace](https://jarito.app/brightspace).
 
-Brightspace support is in beta: the parser was written from D2L's documented feed format and
-hasn't been checked against as many real feeds as Canvas has. If something looks wrong,
-email [feedback@jarito.app](mailto:feedback@jarito.app) (or open a GitHub issue if you have an account).
+Brightspace is tested with a real student feed. Schools configure it a little differently, so if
+something looks wrong, email [feedback@jarito.app](mailto:feedback@jarito.app) (or open a GitHub issue if you have an account).
 
 **Every day:** add it to your home screen (Share → Add to Home Screen on iPhone; the install
 prompt on Android/Chrome) so checking is one tap. Use **Open on my phone** to move to your phone by scanning a code instead of retyping the link.

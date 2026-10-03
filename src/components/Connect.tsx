@@ -90,7 +90,7 @@ export function Connect({ jarito }: { jarito: Jarito }) {
           </label>
           <label>
             <input type="radio" name="platform" value="brightspace" checked={!canvas} onChange={() => setPlatform('brightspace')} />
-            <span>Brightspace / D2L <span className="beta">Beta</span></span>
+            <span>Brightspace / D2L</span>
           </label>
         </div>
       </fieldset>
