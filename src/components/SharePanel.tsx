@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { FEEDBACK_EMAIL } from '../lib/feedback';
 import { MessageSquare, Share2 } from 'lucide-react';
 
 const SITE = 'https://jarito.app';
@@ -29,7 +28,7 @@ export function SharePanel() {
     <section className="share-panel" aria-labelledby="share-title">
       <div>
         <h2 id="share-title">Help classmates catch moved deadlines too</h2>
-        <p>Share Jarito after it works for you. Do not share your private calendar feed link. Questions or ideas? Email {FEEDBACK_EMAIL}.</p>
+        <p>Share Jarito after it works for you. Do not share your private calendar feed link.</p>
       </div>
       <div className="share-actions">
         <button className="btn btn-primary" onClick={share}>

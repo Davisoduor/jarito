@@ -1,4 +1,3 @@
-import { FEEDBACK_EMAIL } from '../lib/feedback';
 import { ClipboardPaste, Heart, MessageSquare, Share2 } from 'lucide-react';
 import { BrightspaceGuide } from './BrightspaceGuide';
 import { FeedGuide } from './FeedGuide';
@@ -82,7 +81,7 @@ export function BrightspaceHelp() {
         items={[
           ['I do not see Subscribe. What now?', 'Open Calendar Settings, turn on Enable Calendar Feeds, save, then return to the calendar.'],
           ['Should I choose one course or all courses?', 'Choose All Calendars and Tasks unless you only want Jarito to watch one course.'],
-          ['Something looks wrong for my school.', 'Schools set Brightspace up in slightly different ways. Email feedback@jarito.app with a screenshot of the list (never your feed link) and it will get fixed.'],
+          ['Something looks wrong for my school.', 'Schools set Brightspace up in slightly different ways. Send a note through the feedback form at jarito.app/feedback, describing what looks off (never your feed link), and it will get fixed.'],
         ]}
       />
     </main>
@@ -122,8 +121,7 @@ export function SupportPage() {
           </a>
         </div>
         <p className="note">
-          Or write to {FEEDBACK_EMAIL} from any email app. Please don’t include your calendar feed link;
-          a screenshot of how the list looks is enough.
+          Please don’t include your calendar feed link; describing what you see is enough.
         </p>
       </section>
     </main>
