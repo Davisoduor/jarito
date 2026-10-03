@@ -39,5 +39,18 @@
       ]
     }
   ],
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jarito.app"
+        }
+      ],
+      "destination": "https://jarito.app/:path*",
+      "permanent": true
+    }
+  ]
 }
