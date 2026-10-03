@@ -3,8 +3,9 @@ import { createRateLimiter } from './_lib/feed.js';
 import { checkFeedback, feedbackEmail } from './_lib/feedback.js';
 
 // Sends through the maintainer's existing mailbox over SMTP. Set in Vercel:
-//   SMTP_HOST (default mail.privateemail.com), SMTP_PORT (default 465),
-//   SMTP_USER, SMTP_PASS, FEEDBACK_TO (defaults to SMTP_USER).
+//   SMTP_HOST (default smtp.gmail.com, i.e. Google Workspace), SMTP_PORT (default 465),
+//   SMTP_USER, SMTP_PASS (a Google App Password, not the account password),
+//   FEEDBACK_TO (defaults to SMTP_USER).
 // The password lives only in Vercel's encrypted environment variables.
 
 const allow = createRateLimiter(5, 10 * 60_000);
@@ -41,7 +42,7 @@ export async function POST(request: Request): Promise<Response> {
   const mail = feedbackEmail(checked.value);
   try {
     const transport = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'mail.privateemail.com',
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: Number(process.env.SMTP_PORT || 465),
       secure: Number(process.env.SMTP_PORT || 465) === 465,
       auth: { user: SMTP_USER, pass: SMTP_PASS },
