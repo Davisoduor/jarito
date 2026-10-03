@@ -41,7 +41,8 @@ Every time you open it, Jarito re-reads your feed and compares it with last time
 
 ## Privacy
 
-- No accounts, no database, no analytics, no cookies.
+- No accounts, no database, no cookies. Page visits are counted with cookieless Vercel Web
+  Analytics, with the URL reduced to origin + path first (`src/lib/analytics.ts`).
 - Your feed link, assignments, and what you've ticked off live in your browser's local storage.
 - Canvas and Brightspace don't allow browsers to read feeds directly, so syncing goes through one small
   function (`api/feed.ts`) that fetches the calendar and returns it. It doesn't store or log the

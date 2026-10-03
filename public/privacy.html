@@ -7,6 +7,7 @@
   <meta name="description" content="What Jarito stores, and where: your feed link and progress stay in your browser." />
   <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/privacy.css" />
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   <main>
@@ -23,8 +24,11 @@
     <h2>Moving to your phone</h2>
     <p>The “Open on my phone” code puts your feed link after a <code>#</code> in the address. Browsers never send that part of an address to a server, and Jarito removes it from the address bar as soon as it has saved the link.</p>
 
+    <h2>Visit counts</h2>
+    <p>Jarito counts page visits with Vercel Web Analytics so we can tell whether students are finding it useful. It uses no cookies and doesn’t identify you or follow you to other sites. Only the page address is recorded, with everything after a <code>#</code> or <code>?</code> removed first, so a feed link can never be included. Vercel also sees rough details like country and device type.</p>
+
     <h2>What we don’t do</h2>
-    <p>No analytics, no ads, no cookies, no tracking, and nothing is sold or shared. Jarito is open source, so you can check all of this in <a href="https://github.com/Davisoduor/jarito">the code on GitHub</a>.</p>
+    <p>No ads, no cookies, no cross-site tracking, no selling or sharing your data. Jarito is open source, so you can check all of this in <a href="https://github.com/Davisoduor/jarito">the code on GitHub</a>.</p>
 
     <h2>Feedback</h2>
     <p>If you use the feedback form, your message, plus your school and email only if you fill them in, is sent as an email to the person who maintains Jarito. It isn’t stored anywhere else or connected to your calendar. The form refuses messages containing a calendar feed link, so a link can’t be sent by accident.</p>

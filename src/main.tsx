@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import './styles.css';
 import { OLD_HOSTS, buildMoveUrl } from './lib/migrate';
+import { inject } from '@vercel/analytics';
+import { stripPrivateUrlParts } from './lib/analytics';
 
 if (OLD_HOSTS.includes(window.location.hostname)) {
   // Jarito moved to jarito.app. Carry this visitor's setup with them.
@@ -10,6 +12,11 @@ if (OLD_HOSTS.includes(window.location.hostname)) {
   try { saved = localStorage.getItem('jarito:v1'); } catch { /* nothing to carry */ }
   window.location.replace(buildMoveUrl(saved, window.location.pathname));
 } else {
+  // Cookieless page-view counts (Vercel Web Analytics). Feed links can sit in
+  // the URL fragment during a phone hand-off or address move, so every event
+  // is reduced to origin + path before it leaves the browser.
+  inject({ beforeSend: event => ({ ...event, url: stripPrivateUrlParts(event.url) }) });
+
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <App />
