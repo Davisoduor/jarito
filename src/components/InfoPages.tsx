@@ -2,8 +2,9 @@ import { ClipboardPaste, Heart, MessageSquare, Share2 } from 'lucide-react';
 import { BrightspaceGuide } from './BrightspaceGuide';
 import { FeedGuide } from './FeedGuide';
 
-const SITE = 'https://jarito.vercel.app';
-const DONATION_URL = import.meta.env.VITE_DONATION_URL as string | undefined;
+const SITE = 'https://jarito.app';
+// A Stripe Payment Link where the supporter picks the amount. Public by design.
+const SUPPORT_URL = 'https://buy.stripe.com/dRmaEY6349BQ83a4uh8og01';
 const FEEDBACK_URL =
   'https://github.com/Davisoduor/jarito/issues/new?title=Jarito%20feedback&body=What%20school%20or%20LMS%20are%20you%20using%3F%0A%0AWhat%20worked%3F%0A%0AWhat%20was%20confusing%3F%0A%0ADid%20Jarito%20catch%20a%20moved%20deadline%3F%0A%0AWhat%20would%20make%20you%20use%20it%20every%20day%3F';
 
@@ -90,38 +91,24 @@ export function BrightspaceHelp() {
 }
 
 export function SupportPage() {
-  const donationEnabled = Boolean(DONATION_URL);
-
   return (
     <main className="page">
       <p className="eyebrow">Support Jarito</p>
       <h1>Jarito stays free for students.</h1>
       <p className="page-lede">
         If Jarito helped you catch a deadline change, you can help keep it running.
-        Donations cover the domain, hosting and the quiet maintenance that makes the tool reliable.
+        Support covers the domain, hosting and the quiet maintenance that makes the tool reliable.
       </p>
 
       <section className="donation-card" aria-labelledby="donate-title">
-        <h2 id="donate-title">Donate</h2>
-        <div className="donation-grid">
-          {['$3', '$5', '$10'].map(amount => (
-            donationEnabled ? (
-              <a key={amount} className="donation-button" href={DONATION_URL} target="_blank" rel="noopener noreferrer">
-                <Heart size={16} aria-hidden="true" />
-                <span>{amount}</span>
-              </a>
-            ) : (
-              <button key={amount} className="donation-button is-disabled" type="button" disabled>
-                <Heart size={16} aria-hidden="true" />
-                <span>{amount}</span>
-              </button>
-            )
-          ))}
-        </div>
+        <h2 id="donate-title">Chip in</h2>
+        <p>Pick any amount. Jarito’s running costs are small, mostly the domain, so every bit goes a long way.</p>
+        <a className="btn btn-primary" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
+          <Heart size={16} aria-hidden="true" /> Support Jarito
+        </a>
         <p className="note">
-          {donationEnabled
-            ? 'The donation link opens the payment page in a new tab.'
-            : 'Donation checkout is being connected. The page is here so the support link can stay in one place.'}
+          Opens Stripe’s secure checkout, where you choose the amount. The charge appears as
+          Oduor Web Services, the small studio that runs Jarito. This is a tip, not a tax-deductible donation.
         </p>
       </section>
 

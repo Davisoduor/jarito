@@ -49,11 +49,11 @@ Never ask people to send their feed link. A screenshot of the assignment list is
 
 I made a free tool that watches Canvas and Brightspace for moved deadlines. Paste your calendar feed once, and it shows what changed since the last time you checked. No account, no database, open source.
 
-Try it: https://jarito.vercel.app
+Try it: https://jarito.app
 
 ## Group chat version
 
-Made this because Canvas quietly moves dates and it is easy to miss. Jarito puts everything due in one list and flags moved deadlines. Free, no login: https://jarito.vercel.app
+Made this because Canvas quietly moves dates and it is easy to miss. Jarito puts everything due in one list and flags moved deadlines. Free, no login: https://jarito.app
 
 ## Institution angle, later
 

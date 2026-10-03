@@ -88,6 +88,12 @@ export function useJarito() {
     await pull(trimmed, true);
   }, [pull]);
 
+  /** Setup carried over from the old jarito.vercel.app address. */
+  const importSaved = useCallback(async (feedUrl: string, status: Record<string, CourseworkStatus>) => {
+    setState(s => ({ ...s, status: { ...status, ...s.status } }));
+    await pull(normalizeFeedUrl(feedUrl), true);
+  }, [pull, setState]);
+
   const connectDemo = useCallback(() => pull(DEMO_FEED, true), [pull]);
 
   const sync = useCallback(async () => {
@@ -127,6 +133,7 @@ export function useJarito() {
     syncing,
     error,
     connect,
+    importSaved,
     connectDemo,
     sync,
     disconnect,

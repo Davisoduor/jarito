@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MessageSquare, Share2 } from 'lucide-react';
 
-const SITE = 'https://jarito.vercel.app';
+const SITE = 'https://jarito.app';
 const SHARE_TEXT = `Jarito watches Canvas and Brightspace for moved deadlines. Free, no account: ${SITE}`;
 const FEEDBACK_URL =
   'https://github.com/Davisoduor/jarito/issues/new?title=Jarito%20feedback&body=What%20school%20or%20LMS%20are%20you%20using%3F%0A%0AWhat%20worked%3F%0A%0AWhat%20was%20confusing%3F%0A%0ADid%20Jarito%20catch%20a%20moved%20deadline%3F%0A%0AWhat%20would%20make%20you%20use%20it%20every%20day%3F';

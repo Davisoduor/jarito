@@ -51,6 +51,17 @@
       ],
       "destination": "https://jarito.app/:path*",
       "permanent": true
+    },
+    {
+      "source": "/:page(canvas|brightspace|support|privacy)",
+      "has": [
+        {
+          "type": "host",
+          "value": "jarito.vercel.app"
+        }
+      ],
+      "destination": "https://jarito.app/:page",
+      "permanent": true
     }
   ]
 }

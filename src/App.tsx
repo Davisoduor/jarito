@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { useJarito } from './hooks/useJarito';
 import { readFeedFromHash } from './lib/handoff';
+import { readImport } from './lib/migrate';
 import { formatSyncedAt } from './lib/dates';
 import { Mark } from './components/Mark';
 import { Connect } from './components/Connect';
@@ -18,11 +19,14 @@ export default function App() {
   // Arriving from the "Open on my phone" QR code: connect, then scrub the feed
   // link out of the address bar and history.
   useEffect(() => {
-    const fromHash = readFeedFromHash(window.location.hash);
-    if (window.location.hash.startsWith('#feed=')) {
+    const hash = window.location.hash;
+    const fromHash = readFeedFromHash(hash);
+    const imported = readImport(hash);
+    if (hash.startsWith('#feed=') || hash.startsWith('#import=')) {
       history.replaceState(null, '', window.location.pathname);
     }
-    if (fromHash && fromHash !== state.feedUrl) jarito.connect(fromHash);
+    if (imported && imported.feedUrl !== state.feedUrl) jarito.importSaved(imported.feedUrl, imported.status);
+    else if (fromHash && fromHash !== state.feedUrl) jarito.connect(fromHash);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
