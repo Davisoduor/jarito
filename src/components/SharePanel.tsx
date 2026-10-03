@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FEEDBACK_EMAIL, FEEDBACK_MAILTO } from '../lib/feedback';
+import { FEEDBACK_EMAIL } from '../lib/feedback';
 import { MessageSquare, Share2 } from 'lucide-react';
 
 const SITE = 'https://jarito.app';
@@ -35,7 +35,7 @@ export function SharePanel() {
         <button className="btn btn-primary" onClick={share}>
           <Share2 size={17} aria-hidden="true" /> {copied ? 'Link copied' : 'Share Jarito'}
         </button>
-        <a className="btn" href={FEEDBACK_MAILTO}>
+        <a className="btn" href="/feedback">
           <MessageSquare size={17} aria-hidden="true" /> Send feedback
         </a>
       </div>

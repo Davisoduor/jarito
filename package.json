@@ -15,12 +15,14 @@
   },
   "dependencies": {
     "lucide-react": "^1.22.0",
+    "nodemailer": "^7.0.13",
     "qrcode": "^1.5.4",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
   "devDependencies": {
     "@types/node": "^22.20.4",
+    "@types/nodemailer": "^8.0.2",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",

@@ -1,5 +1,6 @@
 :root {
   --bg: #EEF2EA;
+  --red: #B3372C;
   --surface: #F8FAF5;
   --ink: #12303B;
   --muted: #4E6166;
@@ -16,6 +17,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0C1F27;
+    --red: #EE8C80;
     --surface: #112A34;
     --ink: #E4ECE6;
     --muted: #9FB2B6;
@@ -107,3 +109,18 @@ details p { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
 .footer { margin-top: 56px; color: var(--muted); font-size: 14px; }
 .footer a + a { margin-left: 14px; }
 
+.feedback-form { display: grid; gap: 6px; margin-top: 28px; }
+.feedback-form label { margin-top: 10px; font-weight: 700; font-size: 15px; }
+.feedback-form .optional { font-weight: 400; color: var(--muted); }
+.feedback-form textarea, .feedback-form input, .feedback-form select {
+  width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 10px;
+  background: var(--bg); color: var(--ink); font: inherit; font-size: 16px;
+}
+.feedback-form textarea { resize: vertical; min-height: 140px; }
+.feedback-form :focus { outline: none; border-color: var(--lake); box-shadow: 0 0 0 3px color-mix(in srgb, var(--lake) 25%, transparent); }
+.fb-row { display: grid; gap: 0 16px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .fb-row { grid-template-columns: 1fr 1fr; } }
+.fb-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.fb-status { margin: 8px 0 0; min-height: 1.5em; font-weight: 600; }
+.fb-status.is-ok { color: var(--lake); }
+.fb-status.is-error { color: var(--red); }

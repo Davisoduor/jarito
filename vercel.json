@@ -53,7 +53,7 @@
       "permanent": true
     },
     {
-      "source": "/:page(canvas|brightspace|support|privacy)",
+      "source": "/:page(canvas|brightspace|support|privacy|feedback)",
       "has": [
         {
           "type": "host",

@@ -1,4 +1,4 @@
-import { FEEDBACK_EMAIL, FEEDBACK_MAILTO } from '../lib/feedback';
+import { FEEDBACK_EMAIL } from '../lib/feedback';
 import { ClipboardPaste, Heart, MessageSquare, Share2 } from 'lucide-react';
 import { BrightspaceGuide } from './BrightspaceGuide';
 import { FeedGuide } from './FeedGuide';
@@ -117,7 +117,7 @@ export function SupportPage() {
           <a className="btn btn-primary" href={shareHref()} target="_blank" rel="noopener noreferrer">
             <Share2 size={17} aria-hidden="true" /> Share with classmates
           </a>
-          <a className="btn" href={FEEDBACK_MAILTO}>
+          <a className="btn" href="/feedback">
             <MessageSquare size={17} aria-hidden="true" /> Send feedback
           </a>
         </div>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Feedback · Jarito</title>
+  <meta name="description" content="Tell us what worked and what didn't in Jarito. No account needed." />
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/pages.css" />
+  <script src="/feedback.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/"><img class="mark" src="/icons/icon.svg" alt="" />Jarito</a>
+      <a class="btn btn-primary" href="/">Start watching</a>
+    </header>
+
+    <main>
+      <p class="eyebrow">Feedback</p>
+      <h1>What worked, and what didn’t?</h1>
+      <p class="lede">Every message is read. Tell us about confusing steps, wrong dates, or what would make you open Jarito every day.</p>
+
+      <form class="card feedback-form" id="feedback" novalidate>
+        <label for="fb-message">Your message</label>
+        <textarea id="fb-message" name="message" rows="6" maxlength="4000" required
+          placeholder="e.g. The setup was easy, but one assignment shows the wrong time."></textarea>
+
+        <div class="fb-row">
+          <div>
+            <label for="fb-school">School <span class="optional">(optional)</span></label>
+            <input id="fb-school" name="school" type="text" maxlength="120" autocomplete="organization" />
+          </div>
+          <div>
+            <label for="fb-lms">Your school uses <span class="optional">(optional)</span></label>
+            <select id="fb-lms" name="lms">
+              <option value="">Not sure</option>
+              <option>Canvas</option>
+              <option>Brightspace</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="fb-reply">Your email <span class="optional">(optional, only if you'd like a reply)</span></label>
+        <input id="fb-reply" name="replyTo" type="email" maxlength="200" autocomplete="email" />
+
+        <div class="fb-hp" aria-hidden="true">
+          <label for="fb-website">Leave this empty</label>
+          <input id="fb-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <p class="note">Please don’t paste your calendar feed link; it works like a password. Describing what you see is plenty.</p>
+        <div class="actions">
+          <button class="btn btn-primary" type="submit" id="fb-send">Send feedback</button>
+        </div>
+        <p class="fb-status" id="fb-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="note">Prefer email? Write to <a href="mailto:feedback@jarito.app">feedback@jarito.app</a>.</p>
+    </main>
+
+    <footer class="footer">
+      <p>Free and open source. Built as an independent student tool.</p>
+      <p><a href="/canvas">Canvas guide</a><a href="/brightspace">Brightspace guide</a><a href="/support">Support</a><a href="/privacy">Privacy</a></p>
+    </footer>
+  </div>
+</body>
+</html>
