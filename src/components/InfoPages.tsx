@@ -1,8 +1,9 @@
+import { useState } from 'react';
+import { shareJarito } from '../lib/share';
 import { ClipboardPaste, Heart, MessageSquare, Share2 } from 'lucide-react';
 import { BrightspaceGuide } from './BrightspaceGuide';
 import { FeedGuide } from './FeedGuide';
 
-const SITE = 'https://jarito.app';
 // A Stripe Payment Link where the supporter picks the amount. Public by design.
 const SUPPORT_URL = 'https://buy.stripe.com/dRmaEY6349BQ83a4uh8og01';
 
@@ -113,9 +114,7 @@ export function SupportPage() {
       <section className="instruction-card" aria-labelledby="help-title">
         <h2 id="help-title">Help without money</h2>
         <div className="support-actions">
-          <a className="btn btn-primary" href={shareHref()} target="_blank" rel="noopener noreferrer">
-            <Share2 size={17} aria-hidden="true" /> Share with classmates
-          </a>
+          <ShareButton />
           <a className="btn" href="/feedback">
             <MessageSquare size={17} aria-hidden="true" /> Send feedback
           </a>
@@ -141,9 +140,16 @@ function FAQ({ items }: { items: [string, string][] }) {
   );
 }
 
-function shareHref() {
-  const text = encodeURIComponent(
-    `Jarito watches Canvas and Brightspace for moved deadlines. Free, no account: ${SITE}`,
+function ShareButton() {
+  const [label, setLabel] = useState('Share with classmates');
+  const share = async () => {
+    const result = await shareJarito();
+    if (result === 'copied') setLabel('Link copied, paste it in your group chat');
+    if (result === 'failed') setLabel('Share this link: jarito.app');
+  };
+  return (
+    <button type="button" className="btn btn-primary" onClick={share}>
+      <Share2 size={17} aria-hidden="true" /> {label}
+    </button>
   );
-  return `https://twitter.com/intent/tweet?text=${text}`;
 }

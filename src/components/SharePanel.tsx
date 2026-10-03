@@ -1,27 +1,17 @@
 import { useState } from 'react';
 import { MessageSquare, Share2 } from 'lucide-react';
 
-const SITE = 'https://jarito.app';
-const SHARE_TEXT = `Jarito watches Canvas and Brightspace for moved deadlines. Free, no account: ${SITE}`;
+import { SITE, shareJarito } from '../lib/share';
 
 export function SharePanel() {
   const [copied, setCopied] = useState(false);
 
+  const [failed, setFailed] = useState(false);
+
   const share = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'Jarito', text: SHARE_TEXT, url: SITE });
-        return;
-      } catch {
-        // Fall through to copy when the share sheet is dismissed or unavailable.
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(SHARE_TEXT);
-      setCopied(true);
-    } catch {
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}`, '_blank', 'noopener,noreferrer');
-    }
+    const result = await shareJarito();
+    if (result === 'copied') setCopied(true);
+    if (result === 'failed') setFailed(true);
   };
 
   return (
@@ -38,6 +28,7 @@ export function SharePanel() {
           <MessageSquare size={17} aria-hidden="true" /> Send feedback
         </a>
       </div>
+      {failed && <p className="note">Copy this link to share: <strong>{SITE}</strong></p>}
     </section>
   );
 }
