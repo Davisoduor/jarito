@@ -8,10 +8,15 @@ interface Props {
   status: CourseworkStatus;
   today: string;
   moved: boolean;
+  /**
+   * Show the date on the row. Off under a day heading, which already says it;
+   * on for Overdue, Done and anywhere rows from different days mix.
+   */
+  showDay?: boolean;
   onStatus: (s: CourseworkStatus) => void;
 }
 
-export function AssignmentRow({ a, status, today, moved, onStatus }: Props) {
+export function AssignmentRow({ a, status, today, moved, showDay = true, onStatus }: Props) {
   const done = status === 'Done';
   const started = status === 'In Progress';
   const diff = daysUntil(a.due, today);
@@ -41,9 +46,11 @@ export function AssignmentRow({ a, status, today, moved, onStatus }: Props) {
         <p className="row-meta">
           {a.course && <span className="row-course">{a.course}</span>}
           <span className="row-due">
-            {formatDay(a.due, today)}{a.dueTime ? `, ${formatTime(a.dueTime)}` : ''}
+            {showDay
+              ? <>{formatDay(a.due, today)}{a.dueTime ? `, ${formatTime(a.dueTime)}` : ''}</>
+              : a.dueTime ? `Due ${formatTime(a.dueTime)}` : 'Any time'}
           </span>
-          {!done && <span className="row-rel">{relativeLabel(diff)}</span>}
+          {!done && (showDay || late) && <span className="row-rel">{relativeLabel(diff)}</span>}
           {moved && <span className="row-moved">date moved</span>}
         </p>
       </div>

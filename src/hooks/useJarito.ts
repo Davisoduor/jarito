@@ -48,14 +48,19 @@ export function useJarito() {
     if (interactive) setError(null);
 
     try {
+      // The demo's dates are generated relative to today, so a demo left open
+      // overnight would report every assignment as moved. Start it fresh daily.
+      const before = stateRef.current;
+      const staleDemo = feedUrl === DEMO_FEED && before.feedUrl === DEMO_FEED
+        && (!before.lastSyncedAt || todayISO(new Date(before.lastSyncedAt)) !== todayISO());
       const assignments = feedUrl === DEMO_FEED
-        ? demoAssignments(todayISO(), stateRef.current.feedUrl === DEMO_FEED ? 1 : 0)
+        ? demoAssignments(todayISO(), before.feedUrl === DEMO_FEED && !staleDemo ? 1 : 0)
         : parseCanvasIcs(await fetchIcs(feedUrl));
 
       const previous = stateRef.current;
       // A different feed (or the first one) would report every assignment as
       // "new", which is noise rather than news — set the baseline silently.
-      const isBaseline = previous.feedUrl !== feedUrl || Object.keys(previous.seen).length === 0;
+      const isBaseline = previous.feedUrl !== feedUrl || Object.keys(previous.seen).length === 0 || staleDemo;
       const fresh = isBaseline ? [] : diffAssignments(assignments, previous.seen);
 
       setState(s => ({

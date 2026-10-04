@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { Jarito } from '../hooks/useJarito';
 import { usePersistedChoice } from '../hooks/usePersistedChoice';
-import { BUCKETS, bucketFor, daysUntil, formatDay, formatTime, relativeLabel, todayISO, type Bucket } from '../lib/dates';
+import { daysUntil, formatDay, formatTime, groupByDay, relativeLabel, todayISO } from '../lib/dates';
 import type { CanvasAssignment } from '../lib/canvasIcs';
 import { AssignmentRow } from './AssignmentRow';
 import { Report } from './Report';
@@ -50,15 +50,8 @@ export function Watch({ jarito }: { jarito: Jarito }) {
   // Date buckets hold unfinished work only: a finished assignment is not
   // "Overdue", and counting it there kept the red heading up after it was
   // ticked. In Everything, finished work gets its own section at the end.
-  const groups = new Map<Bucket, CanvasAssignment[]>();
   const finished = view === 'all' ? visible.filter(a => statusOf(a.uid) === 'Done') : [];
-  if (view !== 'done') {
-    for (const a of visible) {
-      if (statusOf(a.uid) === 'Done') continue;
-      const b = bucketFor(daysUntil(a.due, today));
-      groups.set(b, [...(groups.get(b) ?? []), a]);
-    }
-  }
+  const groups = view === 'done' ? [] : groupByDay(visible.filter(a => statusOf(a.uid) !== 'Done'), today);
 
   return (
     <main className="watch">
@@ -115,7 +108,7 @@ export function Watch({ jarito }: { jarito: Jarito }) {
         )}
       </div>
 
-      {visible.length === 0 || (view === 'all' && groups.size === 0 && finished.length === 0) ? (
+      {visible.length === 0 || (view === 'all' && groups.length === 0 && finished.length === 0) ? (
         <p className="empty">
           {view === 'done' ? 'Nothing marked done yet. Tick an assignment when you submit it.' : 'Nothing left to do here.'}
         </p>
@@ -127,15 +120,17 @@ export function Watch({ jarito }: { jarito: Jarito }) {
           ))}
         </ul>
       ) : (
-        BUCKETS.filter(b => groups.has(b)).map(b => (
-          <section key={b} className={`group group-${b.replace(' ', '-').toLowerCase()}`} aria-labelledby={`g-${b}`}>
-            <h2 id={`g-${b}`} className="group-title">
-              {b}<span className="group-count">{groups.get(b)!.length}</span>
+        groups.map(g => (
+          <section key={g.key} className={`group${g.overdue ? ' group-overdue' : ''}`} aria-labelledby={`g-${g.key}`}>
+            <h2 id={`g-${g.key}`} className="group-title">
+              {g.title}
+              {g.date && <span className="group-date">{g.date}</span>}
+              <span className="group-count">{g.items.length}</span>
             </h2>
             <ul className="rows">
-              {groups.get(b)!.map(a => (
+              {g.items.map(a => (
                 <AssignmentRow key={a.uid} a={a} status={statusOf(a.uid)} today={today} moved={movedUids.has(a.uid)}
-                  onStatus={s => jarito.setStatus(a.uid, s)} />
+                  showDay={g.overdue} onStatus={s => jarito.setStatus(a.uid, s)} />
               ))}
             </ul>
           </section>

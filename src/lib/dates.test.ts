@@ -1,16 +1,23 @@
-import { bucketFor, daysUntil, relativeLabel, todayISO } from './dates';
+import { groupByDay, relativeLabel, todayISO } from './dates';
 
 describe('dates', () => {
   it('formats today in local time', () => {
     expect(todayISO(new Date(2026, 8, 29, 23, 30))).toBe('2026-09-29');
   });
 
-  it('buckets by days remaining', () => {
-    expect(bucketFor(daysUntil('2026-09-28', '2026-09-29'))).toBe('Overdue');
-    expect(bucketFor(0)).toBe('Today');
-    expect(bucketFor(1)).toBe('Tomorrow');
-    expect(bucketFor(7)).toBe('This week');
-    expect(bucketFor(8)).toBe('Later');
+  it('groups by individual day, with Overdue first', () => {
+    const today = '2026-10-03'; // a Saturday
+    const groups = groupByDay([
+      { due: '2026-10-01' }, { due: '2026-10-02' },
+      { due: '2026-10-03' }, { due: '2026-10-04' },
+      { due: '2026-10-06' }, { due: '2026-10-06' },
+      { due: '2026-10-20' },
+    ], today);
+    expect(groups.map(g => [g.title, g.items.length])).toEqual([
+      ['Overdue', 2], ['Today', 1], ['Tomorrow', 1], ['Tuesday', 2], ['Tuesday', 1],
+    ]);
+    expect(groups[3].date).toMatch(/Oct\s6/);
+    expect(groups[4].key).toBe('2026-10-20');
   });
 
   it('labels relative days', () => {
