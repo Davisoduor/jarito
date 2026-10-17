@@ -7,6 +7,7 @@ import { AssignmentRow } from './AssignmentRow';
 import { Report } from './Report';
 import { PhoneHandoff } from './PhoneHandoff';
 import { SharePanel } from './SharePanel';
+import { ChromeSoon } from './ChromeSoon';
 
 type View = 'todo' | 'done' | 'all';
 const VIEWS: { id: View; label: string }[] = [
@@ -161,6 +162,7 @@ export function Watch({ jarito }: { jarito: Jarito }) {
           <button className="btn" onClick={() => setPhoneOpen(true)}>Open on my phone</button>
           <button className="btn btn-quiet" onClick={jarito.disconnect}>Disconnect calendar</button>
         </div>
+        <ChromeSoon />
       </section>}
 
       {!jarito.isDemo && <SharePanel />}
