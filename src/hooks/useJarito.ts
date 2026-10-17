@@ -1,33 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  parseCanvasIcs, diffAssignments, buildSeenMap, isFeedUrl, normalizeFeedUrl,
-  type CanvasAssignment, type AssignmentChange, type SeenMap,
-} from '../lib/canvasIcs';
+import { parseCanvasIcs, isFeedUrl, normalizeFeedUrl } from '../lib/canvasIcs';
 import type { CourseworkStatus } from '../lib/types';
 import { useLocalState } from './useLocalState';
 import { DEMO_FEED, demoAssignments } from '../lib/demo';
 import { todayISO } from '../lib/dates';
+import { emptyState, isStaleDemo, nextState, type JaritoState } from '../lib/sync';
 
 // Ported from D.O.O.'s useCanvas. The differences: no sign-in (the proxy is
 // public and rate-limited), and state lives in localStorage instead of a
-// Supabase row.
-
-export interface JaritoState {
-  /** Bearer-style URL. Stored only on this device. */
-  feedUrl: string;
-  assignments: CanvasAssignment[];
-  /** Last-seen fingerprint per assignment, for change detection. */
-  seen: SeenMap;
-  /** Changes since earlier syncs, held until the student dismisses them. */
-  changes: AssignmentChange[];
-  lastSyncedAt: string;
-  /** Keyed by assignment uid; anything absent is Open. */
-  status: Record<string, CourseworkStatus>;
-}
-
-export const emptyState: JaritoState = {
-  feedUrl: '', assignments: [], seen: {}, changes: [], lastSyncedAt: '', status: {},
-};
+// Supabase row. What a sync does to the state lives in lib/sync.
 
 const STORAGE_KEY = 'jarito:v1';
 /** Re-sync when the app comes back into view after this long. */
@@ -48,31 +29,12 @@ export function useJarito() {
     if (interactive) setError(null);
 
     try {
-      // The demo's dates are generated relative to today, so a demo left open
-      // overnight would report every assignment as moved. Start it fresh daily.
       const before = stateRef.current;
-      const staleDemo = feedUrl === DEMO_FEED && before.feedUrl === DEMO_FEED
-        && (!before.lastSyncedAt || todayISO(new Date(before.lastSyncedAt)) !== todayISO());
       const assignments = feedUrl === DEMO_FEED
-        ? demoAssignments(todayISO(), before.feedUrl === DEMO_FEED && !staleDemo ? 1 : 0)
+        ? demoAssignments(todayISO(), before.feedUrl === DEMO_FEED && !isStaleDemo(before, feedUrl) ? 1 : 0)
         : parseCanvasIcs(await fetchIcs(feedUrl));
 
-      const previous = stateRef.current;
-      // A different feed (or the first one) would report every assignment as
-      // "new", which is noise rather than news — set the baseline silently.
-      const isBaseline = previous.feedUrl !== feedUrl || Object.keys(previous.seen).length === 0 || staleDemo;
-      const fresh = isBaseline ? [] : diffAssignments(assignments, previous.seen);
-
-      setState(s => ({
-        ...s,
-        feedUrl,
-        assignments,
-        seen: buildSeenMap(assignments),
-        // Accumulate: a change seen yesterday and not yet dismissed still matters today.
-        changes: isBaseline ? [] : dedupeChanges([...fresh, ...s.changes]),
-        lastSyncedAt: new Date().toISOString(),
-        status: carryStatus(s.status, s.assignments, assignments),
-      }));
+      setState(s => nextState(s, feedUrl, assignments));
       setError(null);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -161,45 +123,4 @@ async function fetchIcs(feedUrl: string): Promise<string> {
     throw new Error(detail);
   }
   return (await res.json()).ics;
-}
-
-/**
- * Keeps what the student has ticked off across a sync.
- *
- * Status is keyed by the feed's UID, which Canvas keeps stable. If a feed
- * ever hands the same assignment a new UID (not ruled out for Brightspace),
- * the tick is carried over by matching title and course, rather than the
- * assignment silently reappearing as not done. Status for assignments that
- * no longer exist is dropped.
- */
-export function carryStatus(
-  status: Record<string, CourseworkStatus>,
-  before: CanvasAssignment[],
-  after: CanvasAssignment[],
-): Record<string, CourseworkStatus> {
-  const key = (a: CanvasAssignment) => `${a.title}|${a.course}`;
-  const byKey = new Map<string, CourseworkStatus>();
-  for (const a of before ?? []) {
-    const s = status?.[a.uid];
-    if (s) byKey.set(key(a), s);
-  }
-  const next: Record<string, CourseworkStatus> = {};
-  for (const a of after) {
-    const s = status?.[a.uid] ?? byKey.get(key(a));
-    if (s) next[a.uid] = s;
-  }
-  return next;
-}
-
-/** Keeps the newest entry per assignment so repeated syncs don't stack duplicates. */
-function dedupeChanges(changes: AssignmentChange[]): AssignmentChange[] {
-  const seen = new Set<string>();
-  const out: AssignmentChange[] = [];
-  for (const c of changes) {
-    const key = `${c.uid}:${c.kind}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(c);
-  }
-  return out.slice(0, 40);
 }
