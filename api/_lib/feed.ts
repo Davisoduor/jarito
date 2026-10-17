@@ -64,7 +64,9 @@ export async function fetchFeed(feedUrl: string, fetchImpl: typeof fetch = fetch
     throw new FeedError(timedOut ? 'Your school’s system took too long to answer. Try again in a minute.' : 'Could not reach your school’s system. Check the link and try again.', 502);
   }
 
-  if (res.status >= 300 && res.status < 400) {
+  // Browsers (the extension calls this directly) report a manual redirect as
+  // an opaque response with status 0 rather than the 3xx itself.
+  if (res.type === 'opaqueredirect' || (res.status >= 300 && res.status < 400)) {
     throw new FeedError(`Your school redirected the request instead of returning the feed. ${FRESH_LINK}`, 502);
   }
   if (res.status === 400 || res.status === 401 || res.status === 403 || res.status === 404) {

@@ -5,6 +5,11 @@ import { isFeedUrl } from './canvasIcs';
 // it reaches the new device without passing through Vercel's logs. The app
 // reads it once, saves it locally, and strips it from the address bar.
 
+/** Where a hand-off link should open: this site, or jarito.app from the extension. */
+export function appOrigin(): string {
+  return window.location.protocol.startsWith('http') ? window.location.origin : 'https://jarito.app';
+}
+
 export function buildHandoffUrl(origin: string, feedUrl: string): string {
   return `${origin}/#feed=${encodeURIComponent(feedUrl)}`;
 }

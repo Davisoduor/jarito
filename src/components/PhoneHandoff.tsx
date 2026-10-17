@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
-import { buildHandoffUrl } from '../lib/handoff';
+import { appOrigin, buildHandoffUrl } from '../lib/handoff';
 
 export function PhoneHandoff({ feedUrl, onClose }: { feedUrl: string; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [src, setSrc] = useState('');
   const [copied, setCopied] = useState(false);
-  const link = buildHandoffUrl(window.location.origin, feedUrl);
+  const link = buildHandoffUrl(appOrigin(), feedUrl);
 
   useEffect(() => {
     ref.current?.showModal();

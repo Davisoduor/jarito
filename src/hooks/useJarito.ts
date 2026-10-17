@@ -14,8 +14,18 @@ const STORAGE_KEY = 'jarito:v1';
 /** Re-sync when the app comes back into view after this long. */
 const STALE_MS = 15 * 60 * 1000;
 
-export function useJarito() {
-  const [state, setState] = useLocalState<JaritoState>(STORAGE_KEY, emptyState);
+export interface JaritoDeps {
+  /**
+   * Returns a feed's raw ICS. `interactive` is true when the student pressed
+   * something, which is when the extension may ask for permission.
+   */
+  fetchIcs?: (feedUrl: string, interactive: boolean) => Promise<string>;
+  /** Where state is kept. Same contract as useLocalState. */
+  useStore?: typeof useLocalState;
+}
+
+export function useJarito({ fetchIcs = fetchViaProxy, useStore = useLocalState }: JaritoDeps = {}) {
+  const [state, setState] = useStore<JaritoState>(STORAGE_KEY, emptyState);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inFlight = useRef(false);
@@ -32,7 +42,7 @@ export function useJarito() {
       const before = stateRef.current;
       const assignments = feedUrl === DEMO_FEED
         ? demoAssignments(todayISO(), before.feedUrl === DEMO_FEED && !isStaleDemo(before, feedUrl) ? 1 : 0)
-        : parseCanvasIcs(await fetchIcs(feedUrl));
+        : parseCanvasIcs(await fetchIcs(feedUrl, interactive));
 
       setState(s => nextState(s, feedUrl, assignments));
       setError(null);
@@ -44,7 +54,7 @@ export function useJarito() {
       inFlight.current = false;
       setSyncing(false);
     }
-  }, [setState]);
+  }, [fetchIcs, setState]);
 
   const connect = useCallback(async (feedUrl: string) => {
     const trimmed = normalizeFeedUrl(feedUrl);
@@ -111,7 +121,7 @@ export function useJarito() {
 
 export type Jarito = ReturnType<typeof useJarito>;
 
-async function fetchIcs(feedUrl: string): Promise<string> {
+async function fetchViaProxy(feedUrl: string): Promise<string> {
   const res = await fetch('/api/feed', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
