@@ -6,3 +6,4 @@ coverage
 .env*
 .claude/settings.local.json
 dist-extension
+jarito-extension.zip

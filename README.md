@@ -89,6 +89,19 @@ Deploys to Vercel as-is (Vite static build + the `api/` function). For productio
 Vercel Firewall rate-limit rule on `/api/feed` (about 30 requests per minute per IP); the
 in-function limiter only covers a single instance.
 
+## Chrome extension
+
+`extension/` is a Chrome extension built from the same code: the popup reuses the list and
+change report, finds the feed link on an open Canvas tab, reads the feed directly (no
+`/api/feed`), and checks hourly in the background with notifications and a toolbar badge.
+
+```bash
+npm run build:extension   # → dist-extension/, load unpacked in chrome://extensions
+npm run dev:extension     # rebuilds on change
+```
+
+Store listing copy, permission reasons and release steps: [docs/chrome-web-store.md](docs/chrome-web-store.md).
+
 ## Credits
 
 Jarito is an independent open source student tool. Not affiliated with Instructure,
