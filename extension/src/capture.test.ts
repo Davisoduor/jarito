@@ -23,6 +23,13 @@ describe('findFeedLinkOnPage', () => {
     expect(await findFeedLinkOnPage()).toBe(D2L);
   });
 
+  it('looks inside same-origin frames', async () => {
+    vi.stubGlobal('fetch', respond(404, 'Not found'));
+    document.body.innerHTML = '<iframe></iframe>';
+    document.querySelector('iframe')!.contentDocument!.body.innerHTML = `<input value="${D2L}">`;
+    expect(await findFeedLinkOnPage()).toBe(D2L);
+  });
+
   it('ignores a profile without a feed and pages without one', async () => {
     vi.stubGlobal('fetch', respond(200, JSON.stringify({ calendar: { ics: 'https://evil.example/x' } })));
     document.body.innerHTML = '<a href="https://sfsu.instructure.com/calendar">Calendar</a>';

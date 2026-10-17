@@ -24,11 +24,11 @@ export function originPattern(url: string): string {
 }
 
 export async function captureFeedLink(tabId: number): Promise<string | null> {
-  const results = await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, func: findFeedLinkOnPage });
-  for (const r of results) {
-    if (typeof r.result === 'string' && isFeedUrl(normalizeFeedUrl(r.result))) return normalizeFeedUrl(r.result);
-  }
-  return null;
+  // Top frame only. With allFrames, one cross-origin frame we can't touch
+  // (Canvas embeds sso.canvaslms.com) fails the whole injection.
+  const [r] = await chrome.scripting.executeScript({ target: { tabId }, func: findFeedLinkOnPage });
+  const link = typeof r?.result === 'string' ? normalizeFeedUrl(r.result) : '';
+  return isFeedUrl(link) ? link : null;
 }
 
 /**
@@ -38,26 +38,29 @@ export async function captureFeedLink(tabId: number): Promise<string | null> {
  * Canvas lists the signed-in student's own feed under calendar.ics in the
  * profile API, which the page's session can read. Brightspace has no
  * equivalent, so otherwise this looks for a feed link already on the page
- * (Canvas's Calendar Feed box, Brightspace's Subscribe dialog).
+ * (Canvas's Calendar Feed box, Brightspace's Subscribe dialog), including
+ * inside same-origin frames.
  */
 export async function findFeedLinkOnPage(): Promise<string | null> {
   const FEED = /\/feeds\/calendars\/user_[^/?#]+\.ics|\/d2l\/le\/calendar\/feed\/user\/feed\.ics\?token=/;
 
-  if (window === window.top) {
-    try {
-      const res = await fetch('/api/v1/users/self/profile', { headers: { Accept: 'application/json' } });
-      if (res.ok) {
-        // Canvas guards JSON against hijacking with a while(1); prefix.
-        const body = JSON.parse((await res.text()).replace(/^while\(1\);/, ''));
-        const ics = body?.calendar?.ics;
-        if (typeof ics === 'string' && FEED.test(ics)) return ics;
-      }
-    } catch { /* not Canvas, or signed out */ }
-  }
+  try {
+    const res = await fetch('/api/v1/users/self/profile', { headers: { Accept: 'application/json' } });
+    if (res.ok) {
+      // Canvas guards JSON against hijacking with a while(1); prefix.
+      const body = JSON.parse((await res.text()).replace(/^while\(1\);/, ''));
+      const ics = body?.calendar?.ics;
+      if (typeof ics === 'string' && FEED.test(ics)) return ics;
+    }
+  } catch { /* not Canvas, or signed out */ }
 
-  const values = [
-    ...Array.from(document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea'), e => e.value),
-    ...Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]'), a => a.href),
-  ];
+  const docs: Document[] = [document];
+  for (const frame of Array.from(document.querySelectorAll('iframe'))) {
+    try { if (frame.contentDocument) docs.push(frame.contentDocument); } catch { /* cross-origin */ }
+  }
+  const values = docs.flatMap(d => [
+    ...Array.from(d.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea'), e => e.value),
+    ...Array.from(d.querySelectorAll<HTMLAnchorElement>('a[href]'), a => a.href),
+  ]);
   return values.map(v => v.trim()).find(v => FEED.test(v)) ?? null;
 }
