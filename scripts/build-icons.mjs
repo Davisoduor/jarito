@@ -12,6 +12,11 @@ await sharp(mark(false)).resize(512).png().toFile('public/icons/icon-512.png');
 await sharp(mark(true)).resize(512).png().toFile('public/icons/maskable-512.png');
 await sharp(mark(true)).resize(180).png().toFile('public/icons/apple-touch-icon.png');
 
+// Chrome extension toolbar and store icons.
+for (const size of [16, 32, 48, 128]) {
+  await sharp(mark(false)).resize(size).png().toFile(`extension/public/icons/icon-${size}.png`);
+}
+
 // Link preview image for texts and socials.
 const og = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#EEF2EA"/>
