@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { useJarito, type Jarito } from '../../src/hooks/useJarito';
 import { formatSyncedAt } from '../../src/lib/dates';
@@ -6,6 +6,7 @@ import { Mark } from '../../src/components/Mark';
 import { Watch } from '../../src/components/Watch';
 import { useChromeState } from './chromeState';
 import { fetchIcs } from './fetchIcs';
+import { activeWebTab, captureFeedLink, originPattern } from './capture';
 
 const deps = { fetchIcs, useStore: useChromeState };
 
@@ -51,18 +52,62 @@ export function Popup() {
 
 /**
  * The web app's Connect screen walks through finding the link step by step.
- * The popup is too small for that, so it takes the link and points to the
- * guides. Reading it straight off the open Canvas tab comes next.
+ * The popup can usually skip that: it reads the link off the open Canvas tab.
+ * Pasting stays for everything else.
  */
 function Setup({ jarito }: { jarito: Jarito }) {
   const [draft, setDraft] = useState('');
+  const [tab, setTab] = useState<{ id: number; url: string } | null>(null);
+  const [grabbing, setGrabbing] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => { activeWebTab().then(setTab); }, []);
+
+  const grab = () => {
+    if (!tab) return;
+    const origins = [originPattern(tab.url)];
+    // Ask now, while the click still counts: the feed lives on this same host,
+    // and Chrome won't show the prompt after the awaits below.
+    const permission = chrome.permissions.request({ origins }).catch(() => false);
+    setGrabbing(true);
+    setNotFound(false);
+    (async () => {
+      if (!(await permission)) return;
+      const link = await captureFeedLink(tab.id).catch(() => null);
+      if (!link) {
+        // Nothing to watch here, so don't keep access to the site.
+        chrome.permissions.remove({ origins }).catch(() => {});
+        setNotFound(true);
+        return;
+      }
+      setDraft(link);
+      await jarito.connect(link);
+    })().finally(() => setGrabbing(false));
+  };
+
+  const busy = grabbing || jarito.syncing;
 
   return (
     <main className="connect">
       <h1 className="connect-title">Never miss a moved deadline again.</h1>
+      {tab && (
+        <section className="grab" aria-labelledby="grab-title">
+          <h2 id="grab-title">Signed in to Canvas in this tab?</h2>
+          <p>Jarito can find your calendar link on {new URL(tab.url).hostname} for you.</p>
+          <button type="button" className="btn btn-primary btn-wide" onClick={grab} disabled={busy}>
+            {busy ? 'Finding your calendar…' : 'Get my link from this tab'}
+          </button>
+          {notFound && (
+            <p className="note">
+              No calendar link on this page. On Brightspace, open Calendar, press Subscribe, then try again.
+              Or paste the link below.
+            </p>
+          )}
+        </section>
+      )}
       <p className="connect-lede">
-        Paste your Canvas or Brightspace calendar feed link. Jarito reads it straight from your school,
-        on this computer only.
+        {tab ? 'Or paste' : 'Paste'} your Canvas or Brightspace calendar feed link. Jarito reads it straight
+        from your school, on this computer only.
       </p>
       <form className="shortcut-form" onSubmit={e => { e.preventDefault(); jarito.connect(draft); }}>
         <input

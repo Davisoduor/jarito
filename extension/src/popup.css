@@ -22,3 +22,15 @@ body {
 .connect .btn-quiet { padding: 0; min-height: 0; }
 
 .demo-bar { margin-top: 8px; }
+
+.grab {
+  margin: 16px 0 4px;
+  padding: 14px;
+  border: 2px solid var(--lake);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.grab h2 { margin: 0; font-size: 16px; }
+.grab p { margin: 4px 0 12px; color: var(--muted); font-size: 14px; }
+.grab .note { margin: 10px 0 0; }
+.grab .btn-wide { min-height: 44px; font-size: 15px; }

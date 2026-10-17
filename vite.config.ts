@@ -35,6 +35,6 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    include: ['src/**/*.test.ts', 'api/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'api/**/*.test.ts', 'extension/**/*.test.ts'],
   },
 });

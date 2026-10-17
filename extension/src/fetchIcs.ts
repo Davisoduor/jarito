@@ -1,23 +1,24 @@
 import { fetchFeed } from '../../api/_lib/feed';
+import { originPattern } from './capture';
 
 // The web app reads feeds through /api/feed because Canvas and Brightspace
 // send no CORS headers. An extension with host permission for the school can
 // read the feed itself, so here the link never leaves the student's browser.
 // It runs the same checks the proxy does (allow-list, no redirects, 2 MB cap).
 
-/** Host permission for just the feed's own origin, e.g. https://sfsu.instructure.com/* */
-export function feedOrigin(feedUrl: string): string {
-  const { protocol, hostname } = new URL(feedUrl);
-  return `${protocol}//${hostname}/*`;
-}
-
 export async function fetchIcs(feedUrl: string, interactive: boolean): Promise<string> {
   if (interactive) {
-    // Chrome only shows the permission prompt during a user gesture, so this
-    // has to be the first await after the click. Already granted resolves
-    // straight away without a prompt.
+    const origins = [originPattern(feedUrl)];
     let granted = false;
-    try { granted = await chrome.permissions.request({ origins: [feedOrigin(feedUrl)] }); } catch { /* not a feed URL */ }
+    try {
+      // Chrome only shows the prompt during a user gesture, so this has to be
+      // the first await after a click. Already granted resolves without one.
+      granted = await chrome.permissions.request({ origins });
+    } catch {
+      // Not in a gesture any more (the link came from the open tab, after
+      // the click had been spent on asking for that tab's host).
+      granted = await chrome.permissions.contains({ origins }).catch(() => false);
+    }
     if (!granted) {
       throw new Error(`Jarito needs your OK to read your calendar from ${new URL(feedUrl).hostname}. Press Start watching and choose Allow.`);
     }
