@@ -20,7 +20,12 @@ export default defineConfig({
     // Chrome Web Store review reads the code; keep it readable.
     minify: false,
     rollupOptions: {
-      input: { popup: resolve(import.meta.dirname, 'extension/popup.html') },
+      input: {
+        popup: resolve(import.meta.dirname, 'extension/popup.html'),
+        background: resolve(import.meta.dirname, 'extension/src/background.ts'),
+      },
+      // The manifest names the service worker, so its file name can't be hashed.
+      output: { entryFileNames: chunk => chunk.name === 'background' ? 'background.js' : 'assets/[name]-[hash].js' },
     },
   },
 });

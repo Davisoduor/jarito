@@ -34,3 +34,13 @@ body {
 .grab p { margin: 4px 0 12px; color: var(--muted); font-size: 14px; }
 .grab .note { margin: 10px 0 0; }
 .grab .btn-wide { min-height: 44px; font-size: 15px; }
+
+.notify {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 18px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.notify input { margin-top: 3px; accent-color: var(--lake); }

@@ -7,12 +7,14 @@ import { Watch } from '../../src/components/Watch';
 import { useChromeState } from './chromeState';
 import { fetchIcs } from './fetchIcs';
 import { activeWebTab, captureFeedLink, originPattern } from './capture';
+import { NOTIFY_KEY } from './watch';
 
 const deps = { fetchIcs, useStore: useChromeState };
 
 export function Popup() {
   const jarito = useJarito(deps);
   const { state } = jarito;
+  const [notify, setNotify] = useChromeState<boolean>(NOTIFY_KEY, true);
   const courses = new Set(state.assignments.map(a => a.course).filter(Boolean)).size;
 
   return (
@@ -46,6 +48,16 @@ export function Popup() {
       )}
 
       {jarito.connected ? <Watch jarito={jarito} /> : <Setup jarito={jarito} />}
+
+      {jarito.connected && !jarito.isDemo && (
+        <label className="notify">
+          <input type="checkbox" checked={notify} onChange={e => setNotify(e.target.checked)} />
+          <span>
+            Notify me when a due date moves or new work is posted.
+            Jarito checks every hour while Chrome is open.
+          </span>
+        </label>
+      )}
     </div>
   );
 }
