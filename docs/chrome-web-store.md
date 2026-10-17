@@ -85,7 +85,7 @@ Then tick all three certifications: not sold to third parties; not used or trans
 
 | Asset | Size | What to show |
 |---|---|---|
-| Store icon | 128×128 | `extension/public/icons/icon-128.png` (upload as is) |
+| Store icon | 128×128 | `docs/store/store-icon-128.png` (96px mark with the 16px transparent padding the store asks for) |
 | Screenshot 1 | 1280×800 | The change report: "2 things changed since you last looked", with a moved date crossed out |
 | Screenshot 2 | 1280×800 | A Canvas tab with the popup open on "Get my link from this tab" |
 | Screenshot 3 | 1280×800 | A "Due date moved" notification next to the gold badge |
