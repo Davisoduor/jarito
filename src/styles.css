@@ -744,4 +744,4 @@ a.btn { text-decoration: none; justify-content: center; }
   .device, .share-panel { grid-column: 1 / -1; }
 }
 .found { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--lantern-wash); color: var(--lantern-ink); font-size: 15px; box-shadow: inset 0 0 0 1.5px var(--lantern); }
-.chrome-soon { margin-top: 18px; }
+.chrome-install { margin-top: 18px; }

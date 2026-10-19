@@ -91,6 +91,8 @@ in-function limiter only covers a single instance.
 
 ## Chrome extension
 
+**[Jarito on the Chrome Web Store](https://chromewebstore.google.com/detail/jarito/njllbjplgcpjikjdblangplnchnkpkgj)**
+
 `extension/` is a Chrome extension built from the same code: the popup reuses the list and
 change report, finds the feed link on an open Canvas tab, reads the feed directly (no
 `/api/feed`), and checks hourly in the background with notifications and a toolbar badge.

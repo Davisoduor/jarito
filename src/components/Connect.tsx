@@ -7,7 +7,7 @@ import { usePersistedChoice } from '../hooks/usePersistedChoice';
 import { FeedGuide } from './FeedGuide';
 import { BrightspaceGuide } from './BrightspaceGuide';
 import { isStandalone } from '../lib/platform';
-import { ChromeSoon } from './ChromeSoon';
+import { ChromeInstall } from './ChromeInstall';
 
 const SCHOOL_KEY = 'jarito:school';
 
@@ -227,7 +227,7 @@ export function Connect({ jarito }: { jarito: Jarito }) {
         Want to look first?{' '}
         <button type="button" className="link-btn" onClick={jarito.connectDemo}>See it with sample coursework</button>
       </p>
-      <ChromeSoon />
+      <ChromeInstall />
     </main>
   );
 }
