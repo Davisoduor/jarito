@@ -271,6 +271,28 @@ a { color: inherit; }
 .report-move, .report-course { font-size: 14px; }
 .report-move s { opacity: 0.7; }
 .kind-removed .report-title { text-decoration: line-through; opacity: 0.7; }
+.report-removed { border-top: 1px solid color-mix(in srgb, var(--lantern) 45%, transparent); padding: 10px 0; }
+.report-removed summary { cursor: pointer; font-size: 14px; font-weight: 600; }
+.report-removed .report-list { margin-top: 4px; }
+
+/* Phone alerts waitlist: asks once, under a real change, then says thanks. */
+.waitlist {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin: 0;
+  padding: 12px 0 10px;
+  border-top: 1px solid color-mix(in srgb, var(--lantern) 45%, transparent);
+  font-size: 15px;
+}
+.waitlist .waitlist-open { padding: 0; color: var(--lantern-ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.waitlist-form { display: block; }
+.waitlist-form .field-row input { background: var(--surface); }
+.waitlist-error { margin: 8px 0 0; color: var(--red); font-size: 14px; font-weight: 600; }
+.waitlist-fine { margin: 8px 0 0; font-size: 13px; }
+.waitlist-done { font-weight: 600; }
 
 /* ---- Controls --------------------------------------------------------- */
 

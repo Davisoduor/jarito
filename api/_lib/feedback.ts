@@ -9,6 +9,8 @@ export interface Feedback {
   school: string;
   lms: string;
   replyTo: string;
+  // 'phone-alerts' marks a waitlist signup from the change report.
+  topic: '' | 'phone-alerts';
 }
 
 export type Checked = { ok: true; value: Feedback } | { ok: false; error: string; status: number };
@@ -42,13 +44,15 @@ export function checkFeedback(body: unknown): Checked {
     return { ok: false, error: 'Please remove your calendar feed link. It works like a password. A description or screenshot is enough.', status: 400 };
   }
 
-  return { ok: true, value: { message, school, lms, replyTo } };
+  const topic = clean(b.topic, 20) === 'phone-alerts' ? 'phone-alerts' : '';
+
+  return { ok: true, value: { message, school, lms, replyTo, topic } };
 }
 
 export function feedbackEmail(f: Feedback, now = new Date()) {
   const where = [f.school, f.lms].filter(Boolean).join(' · ') || 'school not given';
   return {
-    subject: `Jarito feedback (${where})`,
+    subject: f.topic === 'phone-alerts' ? `Jarito waitlist: phone alerts (${where})` : `Jarito feedback (${where})`,
     text: [
       f.message,
       '',
