@@ -294,6 +294,16 @@ a { color: inherit; }
 .waitlist-fine { margin: 8px 0 0; font-size: 13px; }
 .waitlist-done { font-weight: 600; }
 
+/* Quiet-day home for the waitlist and the calculator, under Next up. Lantern
+   stays reserved for changes, so these use the lake colour. */
+.side-tools { display: grid; gap: 12px; padding: 16px 0 26px; border-top: 1px solid var(--line); }
+.side-tools .waitlist { border-top: 0; padding: 0; color: var(--ink); }
+.side-tools .waitlist .waitlist-open { color: var(--lake); }
+.side-tools .waitlist-form .field-row input { background: var(--surface); }
+.side-tools .waitlist-fine { color: var(--muted); }
+.side-link { font-size: 15px; font-weight: 600; color: var(--lake); text-underline-offset: 3px; }
+.side-link::after { content: " →"; }
+
 /* ---- Controls --------------------------------------------------------- */
 
 .controls {

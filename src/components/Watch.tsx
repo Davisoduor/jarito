@@ -8,6 +8,7 @@ import { Report } from './Report';
 import { PhoneHandoff } from './PhoneHandoff';
 import { SharePanel } from './SharePanel';
 import { ChromeInstall } from './ChromeInstall';
+import { PhoneAlertsWaitlist } from './PhoneAlertsWaitlist';
 
 type View = 'todo' | 'done' | 'all';
 const VIEWS: { id: View; label: string }[] = [
@@ -29,6 +30,8 @@ export function Watch({ jarito }: { jarito: Jarito }) {
     () => new Set(state.changes.filter(c => c.kind === 'due-moved').map(c => c.uid)),
     [state.changes],
   );
+
+  const hasRealChanges = state.changes.some(c => c.kind !== 'removed');
 
   const courses = useMemo(
     () => Array.from(new Set(state.assignments.map(a => a.course).filter(Boolean))).sort(),
@@ -81,6 +84,13 @@ export function Watch({ jarito }: { jarito: Jarito }) {
       </section>
 
       {state.changes.length > 0 && <Report changes={state.changes} onDismiss={jarito.dismissChanges} />}
+
+      {/* The report asks about phone alerts only when something real changed;
+          on a quiet day the question lives here, so everyone can see it. */}
+      <aside className="side-tools" aria-label="More from Jarito">
+        {!hasRealChanges && <PhoneAlertsWaitlist />}
+        <a className="side-link" href="/final-grade">Finals coming up? See what you need on your final</a>
+      </aside>
       </div>
 
       <div className="watch-main">
