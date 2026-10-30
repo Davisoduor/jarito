@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>What do I need on my final? · Jarito</title>
+  <meta name="description" content="Enter your current grade and what the final is worth. See the score you need for an A, B or C, and what any final score does to your grade." />
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/pages.css" />
+  <script src="/final-grade.js" defer></script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/"><img class="mark" src="/icons/icon.svg" alt="" />Jarito</a>
+      <a class="btn btn-primary" href="/">Start watching</a>
+    </header>
+
+    <main>
+      <p class="eyebrow">Final grade calculator</p>
+      <h1>What do I need on my final?</h1>
+      <p class="lede">Three numbers, one answer. Nothing is saved or sent anywhere.</p>
+
+      <form class="card fg-form" id="fg" novalidate>
+        <div class="fg-fields">
+          <div>
+            <label for="fg-current">My grade right now</label>
+            <div class="fg-input"><input id="fg-current" name="current" type="number" inputmode="decimal" min="0" max="150" step="any" value="84" /><span>%</span></div>
+            <p class="fg-hint">The Total on your Canvas or Brightspace grades page.</p>
+          </div>
+          <div>
+            <label for="fg-weight">The final is worth</label>
+            <div class="fg-input"><input id="fg-weight" name="weight" type="number" inputmode="decimal" min="1" max="100" step="any" value="25" /><span>%</span></div>
+            <p class="fg-hint">Of your course grade. It’s in the syllabus.</p>
+          </div>
+          <div>
+            <label for="fg-target">I want at least</label>
+            <div class="fg-input"><input id="fg-target" name="target" type="number" inputmode="decimal" min="0" max="150" step="any" value="80" /><span>%</span></div>
+            <div class="fg-chips" role="group" aria-label="Common grade cutoffs">
+              <button type="button" data-target="90">A · 90</button>
+              <button type="button" data-target="80">B · 80</button>
+              <button type="button" data-target="70">C · 70</button>
+              <button type="button" data-target="60">D · 60</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="fg-answer" id="fg-answer" role="status" aria-live="polite">
+          <p class="fg-need" id="fg-need">You need <strong>68%</strong> on the final.</p>
+          <p class="fg-sub" id="fg-sub">That gets you an 80% in the course.</p>
+        </div>
+
+        <div class="fg-whatif">
+          <h2>What-if: each final score</h2>
+          <table>
+            <thead><tr><th scope="col">If I get</th><th scope="col">My course grade</th></tr></thead>
+            <tbody id="fg-table"></tbody>
+          </table>
+          <p class="note">Assumes the final is the only grade left. Check your syllabus for curves, dropped scores, or a rule that you must pass the final.</p>
+        </div>
+      </form>
+
+      <section class="card fg-plug">
+        <h2>Finals get moved too.</h2>
+        <p>Jarito watches your Canvas or Brightspace calendar and tells you the moment a professor moves an exam or due date. It’s free and needs no account.</p>
+        <div class="actions"><a class="btn btn-primary" href="/">Start watching my deadlines</a></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Free and open source. Built as an independent student tool.</p>
+      <p><a href="/canvas">Canvas guide</a><a href="/brightspace">Brightspace guide</a><a href="/support">Support</a><a href="/privacy">Privacy</a></p>
+    </footer>
+  </div>
+</body>
+</html>

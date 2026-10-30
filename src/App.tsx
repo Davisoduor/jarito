@@ -82,6 +82,7 @@ export default function App() {
           <a href="https://github.com/Davisoduor/jarito">Source on GitHub</a>
           <a href="/canvas">Canvas guide</a>
           <a href="/brightspace">Brightspace guide</a>
+          <a href="/final-grade">Final grade calculator</a>
           <a href="/support">Support</a>
           <a href="/privacy">Privacy</a>
         </p>

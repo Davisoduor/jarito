@@ -3,7 +3,7 @@ import { checkFeedback, feedbackEmail, MAX_MESSAGE } from './feedback';
 describe('checkFeedback', () => {
   it('accepts a normal message', () => {
     const r = checkFeedback({ message: 'Works great!', school: 'SFSU', lms: 'Canvas', replyTo: 'a@b.edu' });
-    expect(r).toEqual({ ok: true, value: { message: 'Works great!', school: 'SFSU', lms: 'Canvas', replyTo: 'a@b.edu' } });
+    expect(r).toEqual({ ok: true, value: { message: 'Works great!', school: 'SFSU', lms: 'Canvas', replyTo: 'a@b.edu', topic: '' } });
   });
 
   it('requires a message and caps its length', () => {
@@ -33,8 +33,17 @@ describe('checkFeedback', () => {
 
 describe('feedbackEmail', () => {
   it('summarises who it came from in the subject', () => {
-    const m = feedbackEmail({ message: 'Hi', school: 'Purdue', lms: 'Brightspace', replyTo: '' }, new Date(0));
+    const m = feedbackEmail({ message: 'Hi', school: 'Purdue', lms: 'Brightspace', replyTo: '', topic: '' }, new Date(0));
     expect(m.subject).toBe('Jarito feedback (Purdue · Brightspace)');
     expect(m.text).toContain('Reply to: (anonymous)');
+  });
+
+  it('labels phone alerts waitlist signups so they can be counted', () => {
+    const r = checkFeedback({ message: 'Add me. Contact: 415 555 0100', topic: 'phone-alerts' });
+    expect(r.ok && r.value.topic).toBe('phone-alerts');
+    expect(feedbackEmail({ message: 'x', school: '', lms: '', replyTo: '', topic: 'phone-alerts' }).subject)
+      .toBe('Jarito waitlist: phone alerts (school not given)');
+    const other = checkFeedback({ message: 'hello', topic: 'anything-else' });
+    expect(other.ok && other.value.topic).toBe('');
   });
 });
