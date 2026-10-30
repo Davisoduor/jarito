@@ -124,3 +124,35 @@ details p { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
 .fb-status { margin: 8px 0 0; min-height: 1.5em; font-weight: 600; }
 .fb-status.is-ok { color: var(--lake); }
 .fb-status.is-error { color: var(--red); }
+
+/* Final grade calculator */
+.fg-form { display: grid; gap: 24px; }
+.fg-fields { display: grid; gap: 18px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .fg-fields { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.fg-fields label { display: block; margin-bottom: 6px; font-weight: 700; font-size: 15px; }
+.fg-input { display: flex; align-items: center; gap: 8px; }
+.fg-input input {
+  width: 100%; min-height: 52px; padding: 0 14px; border: 1.5px solid var(--line); border-radius: 10px;
+  background: var(--bg); color: var(--ink); font: inherit; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.fg-input input:focus { outline: none; border-color: var(--lake); box-shadow: 0 0 0 3px color-mix(in srgb, var(--lake) 25%, transparent); }
+.fg-input span { font-weight: 700; color: var(--muted); }
+.fg-hint { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+.fg-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.fg-chips button {
+  min-height: 36px; padding: 0 12px; border-radius: 99px; border: 1.5px solid var(--line);
+  background: var(--bg); color: var(--ink); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.fg-chips button[aria-pressed="true"] { background: var(--lake); border-color: var(--lake); color: var(--lake-ink); }
+.fg-chips button:focus-visible { outline: 3px solid color-mix(in srgb, var(--lake) 40%, transparent); outline-offset: 2px; }
+.fg-answer { padding: 18px 20px; border-radius: 14px; background: var(--lake); color: var(--lake-ink); }
+.fg-answer.is-safe { background: var(--surface); color: var(--ink); border: 2px solid var(--lake); }
+.fg-answer.is-out { background: var(--lantern-wash); color: var(--lantern-ink); border: 2px solid var(--lantern); }
+.fg-need { margin: 0; font-size: clamp(24px, 5vw, 34px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; }
+.fg-sub { margin: 6px 0 0; font-size: 16px; opacity: 0.9; }
+.fg-whatif table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.fg-whatif th, .fg-whatif td { text-align: left; padding: 9px 4px; border-bottom: 1px solid var(--line); }
+.fg-whatif th { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.fg-whatif tr.is-met td { font-weight: 700; }
+.fg-whatif tr.is-met td:last-child::after { content: " ✓"; color: var(--lake); }
+.fg-plug p { margin: 0; color: var(--muted); }
